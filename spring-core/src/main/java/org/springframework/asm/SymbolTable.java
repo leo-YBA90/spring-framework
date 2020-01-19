@@ -28,6 +28,8 @@
 package org.springframework.asm;
 
 /**
+ * 常量池条目、BootstrapMethods属性条目和类的(特定于ASM的)类型表条目。
+ *
  * The constant pool entries, the BootstrapMethods attribute entries and the (ASM specific) type
  * table entries of a class.
  *
@@ -40,6 +42,9 @@ package org.springframework.asm;
 final class SymbolTable {
 
   /**
+   * 这个SymbolTable所属的ClassWriter。这仅用于获得对{@link ClassWriter#getCommonSuperClass}的访问，
+   * 并使用{@link Attribute#write}序列化定制属性。
+   *
    * The ClassWriter to which this SymbolTable belongs. This is only used to get access to {@link
    * ClassWriter#getCommonSuperClass} and to serialize custom attributes with {@link
    * Attribute#write}.
@@ -47,24 +52,40 @@ final class SymbolTable {
   final ClassWriter classWriter;
 
   /**
+   * 构造这个符号表的ClassReader，如果从零开始构造，则为{@literal null}。
+   *
    * The ClassReader from which this SymbolTable was constructed, or {@literal null} if it was
    * constructed from scratch.
    */
   private final ClassReader sourceClassReader;
 
-  /** The major version number of the class to which this symbol table belongs. */
+  /**
+   * 这个符号表所属的类的主版本号。
+   *
+   * The major version number of the class to which this symbol table belongs.
+   */
   private int majorVersion;
 
-  /** The internal name of the class to which this symbol table belongs. */
+  /**
+   * 这个符号表所属的类的内部名称。
+   *
+   * The internal name of the class to which this symbol table belongs.
+   */
   private String className;
 
   /**
+   * {@link #entries}中的{@link Entry}实例总数。这包括可以通过{@link Entry#next}(递归地)访问的条目。
+   *
    * The total number of {@link Entry} instances in {@link #entries}. This includes entries that are
    * accessible (recursively) via {@link Entry#next}.
    */
   private int entryCount;
 
   /**
+   * 这个符号表中所有条目的散列集(包括常量池条目、引导方法条目和类型表条目)。每个{@link Entry}实例都存储在数组索引中，
+   * 该索引是由数组大小的散列码模数给出的。如果多个条目必须存储在同一个数组索引中，则通过它们的{@link Entry#next}字段将它们链接在一起。
+   * 这个类的工厂方法确保这个表不包含重复的条目。
+   *
    * A hash set of all the entries in this SymbolTable (this includes the constant pool entries, the
    * bootstrap method entries and the type table entries). Each {@link Entry} instance is stored at
    * the array index given by its hash code modulo the array size. If several entries must be stored
@@ -74,12 +95,17 @@ final class SymbolTable {
   private Entry[] entries;
 
   /**
+   * 常量池项在{@link #constantPool}中的数量，加1。第一个常量池项具有索引1,long和double项对两个项进行计数。
+   *
    * The number of constant pool items in {@link #constantPool}, plus 1. The first constant pool
    * item has index 1, and long and double items count for two items.
    */
   private int constantPoolCount;
 
   /**
+   * 对应于这个符号表的类文件的constant_pool jvm结构的内容。
+   * 不包括ClassFile的constant_pool_count字段
+   *
    * The content of the ClassFile's constant_pool JVMS structure corresponding to this SymbolTable.
    * The ClassFile's constant_pool_count field is <i>not</i> included.
    */
