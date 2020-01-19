@@ -23,9 +23,14 @@ import org.springframework.core.ResolvableType;
 import org.springframework.lang.Nullable;
 
 /**
+ *
+ * BeanDefinition描述一个bean实例，该实例具有属性值、构造函数参数值和具体实现提供的进一步信息。
+ *
  * A BeanDefinition describes a bean instance, which has property values,
  * constructor argument values, and further information supplied by
  * concrete implementations.
+ *
+ * 这只是一个最小的接口:主要目的是允许{@link BeanFactoryPostProcessor}检查和修改属性值和其他bean metadata。
  *
  * <p>This is just a minimal interface: The main intention is to allow a
  * {@link BeanFactoryPostProcessor} to introspect and modify property values
@@ -41,6 +46,9 @@ import org.springframework.lang.Nullable;
 public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 
 	/**
+	 * 标准单例范围的范围标识符:{@value}。
+	 * 注意：扩展的bean工厂可能支持更多的作用域。
+	 *
 	 * Scope identifier for the standard singleton scope: {@value}.
 	 * <p>Note that extended bean factories might support further scopes.
 	 * @see #setScope
