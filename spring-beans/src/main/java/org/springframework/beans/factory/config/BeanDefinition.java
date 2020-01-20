@@ -308,6 +308,9 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	}
 
 	/**
+	 * 返回要应用到bean的新实例的属性值。
+	 * 在bean工厂的后期处理过程中可以修改返回的实例。
+	 *
 	 * Return the property values to be applied to a new instance of the bean.
 	 * <p>The returned instance can be modified during bean factory post-processing.
 	 * @return the MutablePropertyValues object (never {@code null})
@@ -315,6 +318,8 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	MutablePropertyValues getPropertyValues();
 
 	/**
+	 * 返回为这个bean定义的属性值
+	 *
 	 * Return if there are property values values defined for this bean.
 	 * @since 5.0.2
 	 */
@@ -323,12 +328,16 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	}
 
 	/**
+	 * 设置初始化器方法的名称。
+	 *
 	 * Set the name of the initializer method.
 	 * @since 5.1
 	 */
 	void setInitMethodName(@Nullable String initMethodName);
 
 	/**
+	 * 返回初始化器方法的名称。
+	 *
 	 * Return the name of the initializer method.
 	 * @since 5.1
 	 */
@@ -336,12 +345,16 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	String getInitMethodName();
 
 	/**
+	 * 设置销毁方法的名称。
+	 *
 	 * Set the name of the destroy method.
 	 * @since 5.1
 	 */
 	void setDestroyMethodName(@Nullable String destroyMethodName);
 
 	/**
+	 * 返回销毁方法的名称。
+	 *
 	 * Return the name of the destroy method.
 	 * @since 5.1
 	 */
@@ -349,6 +362,10 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	String getDestroyMethodName();
 
 	/**
+	 * 为这个{@code BeanDefinition}设置角色提示。
+	 * 角色提示为框架和工具提供特定{@code BeanDefinition}的角色和重要性指示。
+	 *
+	 *
 	 * Set the role hint for this {@code BeanDefinition}. The role hint
 	 * provides the frameworks as well as tools with an indication of
 	 * the role and importance of a particular {@code BeanDefinition}.
@@ -360,6 +377,8 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	void setRole(int role);
 
 	/**
+	 * 获取此{@code BeanDefinition}的角色提示。角色提示为框架和工具提供特定的{@code BeanDefinition}角色和重要性指示。
+	 *
 	 * Get the role hint for this {@code BeanDefinition}. The role hint
 	 * provides the frameworks as well as tools with an indication of
 	 * the role and importance of a particular {@code BeanDefinition}.
@@ -370,12 +389,15 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	int getRole();
 
 	/**
+	 * 设置此bean定义的可读描述。
+	 *
 	 * Set a human-readable description of this bean definition.
 	 * @since 5.1
 	 */
 	void setDescription(@Nullable String description);
 
 	/**
+	 * 返回该bean定义的可读描述。
 	 * Return a human-readable description of this bean definition.
 	 */
 	@Nullable
@@ -385,6 +407,10 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	// Read-only attributes
 
 	/**
+	 * 返回此bean定义的可解析类型，
+	 * 基于bean类或其他特定的元数据。
+	 * 这通常在运行时合并的bean定义上完全解决，但不一定在配置时定义实例上解决。
+	 *
 	 * Return a resolvable type for this bean definition,
 	 * based on the bean class or other specific metadata.
 	 * <p>This is typically fully resolved on a runtime-merged bean definition
@@ -396,6 +422,8 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	ResolvableType getResolvableType();
 
 	/**
+	 * 返回单例，在所有调用上返回一个共享实例。
+	 *
 	 * Return whether this a <b>Singleton</b>, with a single, shared instance
 	 * returned on all calls.
 	 * @see #SCOPE_SINGLETON
@@ -403,6 +431,8 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	boolean isSingleton();
 
 	/**
+	 * 返回是否为原型，每个调用返回一个独立的实例。
+	 *
 	 * Return whether this a <b>Prototype</b>, with an independent instance
 	 * returned for each call.
 	 * @since 3.0
@@ -411,11 +441,15 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	boolean isPrototype();
 
 	/**
+	 * 返回这个bean是否“抽象”，也就是说，它不是要实例化的。
+	 *
 	 * Return whether this bean is "abstract", that is, not meant to be instantiated.
 	 */
 	boolean isAbstract();
 
 	/**
+	 * 返回此bean定义来自的资源的描述(用于在出现错误时显示上下文)。
+	 *
 	 * Return a description of the resource that this bean definition
 	 * came from (for the purpose of showing context in case of errors).
 	 */
@@ -423,6 +457,9 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	String getResourceDescription();
 
 	/**
+	 * 返回原始的bean定义，如果没有，则返回{@code null}。允许检索修饰过的bean定义(如果有的话)。
+	 * 请注意，此方法返回直接发起者。遍历发起者链，找到用户定义的原始bean定义。
+	 *
 	 * Return the originating BeanDefinition, or {@code null} if none.
 	 * Allows for retrieving the decorated bean definition, if any.
 	 * <p>Note that this method returns the immediate originator. Iterate through the
