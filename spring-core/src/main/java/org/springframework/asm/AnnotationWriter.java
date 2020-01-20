@@ -28,6 +28,12 @@
 package org.springframework.asm;
 
 /**
+ *
+ * 一个{@link AnnotationVisitor}继承类，它生成相应的'annotation'或'type_annotation'结构，
+ * 如Java虚拟机规范(JVMS)中定义的那样。可以将AnnotationWriter实例链接到一个双链列表中，
+ * 可以使用{@link #putAnnotations}方法从该列表中生成Runtime[In]Visible[Type]Annotations属性。
+ * 类似地，此类列表的数组可用于生成Runtime[In]Visible[Type]Annotations属性。
+ *
  * An {@link AnnotationVisitor} that generates a corresponding 'annotation' or 'type_annotation'
  * structure, as defined in the Java Virtual Machine Specification (JVMS). AnnotationWriter
  * instances can be chained in a doubly linked list, from which Runtime[In]Visible[Type]Annotations
@@ -43,7 +49,11 @@ package org.springframework.asm;
  */
 final class AnnotationWriter extends AnnotationVisitor {
 
-  /** Where the constants used in this AnnotationWriter must be stored. */
+  /**
+   * 这里必须存储在这个AnnotationWriter中使用的常量。
+   *
+   * Where the constants used in this AnnotationWriter must be stored.
+   */
   private final SymbolTable symbolTable;
 
   /**
