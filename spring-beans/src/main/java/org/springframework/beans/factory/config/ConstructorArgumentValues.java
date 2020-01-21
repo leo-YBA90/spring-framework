@@ -32,7 +32,13 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.ObjectUtils;
 
 /**
+ * 构造函数参数值
+ *
+ * 构造函数参数值的Holder，通常作为bean定义的一部分。
+ *
  * Holder for constructor argument values, typically as part of a bean definition.
+ *
+ * 支持构造函数参数列表中特定索引的值，以及按类型匹配的泛型参数的值。
  *
  * <p>Supports values for a specific index in the constructor argument list
  * as well as for generic argument matches by type.
@@ -64,6 +70,10 @@ public class ConstructorArgumentValues {
 
 
 	/**
+	 * 将所有给定的参数值复制到这个对象中，使用单独的holder实例来保持这些值独立于原始对象。
+	 * 注:相同的ValueHolder实例只注册一次，允许合并和重新合并参数值定义。
+	 * 当然，带有相同内容的不同ValueHolder实例是允许的。
+	 *
 	 * Copy all given argument values into this object, using separate holder
 	 * instances to keep the values independent from the original object.
 	 * <p>Note: Identical ValueHolder instances will only be registered once,
@@ -83,6 +93,8 @@ public class ConstructorArgumentValues {
 
 
 	/**
+	 * 在构造函数参数列表中为给定的索引添加一个参数值。
+	 *
 	 * Add an argument value for the given index in the constructor argument list.
 	 * @param index the index in the constructor argument list
 	 * @param value the argument value
@@ -92,6 +104,8 @@ public class ConstructorArgumentValues {
 	}
 
 	/**
+	 * 在构造函数参数列表中为给定的索引添加一个参数值。
+	 *
 	 * Add an argument value for the given index in the constructor argument list.
 	 * @param index the index in the constructor argument list
 	 * @param value the argument value
@@ -102,6 +116,8 @@ public class ConstructorArgumentValues {
 	}
 
 	/**
+	 * 在构造函数参数列表中为给定的索引添加一个参数值。
+	 *
 	 * Add an argument value for the given index in the constructor argument list.
 	 * @param index the index in the constructor argument list
 	 * @param newValue the argument value in the form of a ValueHolder
@@ -113,6 +129,9 @@ public class ConstructorArgumentValues {
 	}
 
 	/**
+	 * 在构造函数参数列表中为给定的索引添加一个参数值，如果需要，将新值(通常是一个集合)与当前值合并
+	 * 参见{@link org.springframework.beans.Mergeable}。
+	 *
 	 * Add an argument value for the given index in the constructor argument list,
 	 * merging the new value (typically a collection) with the current value
 	 * if demanded: see {@link org.springframework.beans.Mergeable}.
@@ -131,6 +150,8 @@ public class ConstructorArgumentValues {
 	}
 
 	/**
+	 * 检查是否为给定的索引注册了参数值。
+	 *
 	 * Check whether an argument value has been registered for the given index.
 	 * @param index the index in the constructor argument list
 	 */
@@ -139,6 +160,8 @@ public class ConstructorArgumentValues {
 	}
 
 	/**
+	 * 在构造函数参数列表中获取给定索引的参数值。
+	 *
 	 * Get argument value for the given index in the constructor argument list.
 	 * @param index the index in the constructor argument list
 	 * @param requiredType the type to match (can be {@code null} to match
@@ -151,6 +174,8 @@ public class ConstructorArgumentValues {
 	}
 
 	/**
+	 * 在构造函数参数列表中获取给定索引的参数值。
+	 *
 	 * Get argument value for the given index in the constructor argument list.
 	 * @param index the index in the constructor argument list
 	 * @param requiredType the type to match (can be {@code null} to match
@@ -174,6 +199,8 @@ public class ConstructorArgumentValues {
 	}
 
 	/**
+	 * 返回索引参数值的map。
+	 *
 	 * Return the map of indexed argument values.
 	 * @return unmodifiable Map with Integer index as key and ValueHolder as value
 	 * @see ValueHolder
@@ -184,6 +211,9 @@ public class ConstructorArgumentValues {
 
 
 	/**
+	 * 添加要按类型匹配的泛型参数值。
+	 * 注意:单个泛型参数值只使用一次，而不是多次匹配。
+	 *
 	 * Add a generic argument value to be matched by type.
 	 * <p>Note: A single generic argument value will just be used once,
 	 * rather than matched multiple times.
@@ -194,6 +224,9 @@ public class ConstructorArgumentValues {
 	}
 
 	/**
+	 * 添加要按类型匹配的泛型参数值。
+	 * 注意:单个泛型参数值只使用一次，而不是多次匹配。
+	 *
 	 * Add a generic argument value to be matched by type.
 	 * <p>Note: A single generic argument value will just be used once,
 	 * rather than matched multiple times.
@@ -205,6 +238,9 @@ public class ConstructorArgumentValues {
 	}
 
 	/**
+	 * 添加要按类型匹配的泛型参数值。
+	 * 注意:单个泛型参数值只使用一次，而不是多次匹配。
+	 *
 	 * Add a generic argument value to be matched by type or name (if available).
 	 * <p>Note: A single generic argument value will just be used once,
 	 * rather than matched multiple times.
@@ -221,6 +257,9 @@ public class ConstructorArgumentValues {
 	}
 
 	/**
+	 * 添加一个通用的参数值，如果需要，将新值(通常是一个集合)与当前值合并
+	 * 参见{@link org.springframework.beans.Mergeable}。
+	 *
 	 * Add a generic argument value, merging the new value (typically a collection)
 	 * with the current value if demanded: see {@link org.springframework.beans.Mergeable}.
 	 * @param newValue the argument value in the form of a ValueHolder
@@ -244,6 +283,8 @@ public class ConstructorArgumentValues {
 	}
 
 	/**
+	 * 寻找与给定类型匹配的泛型参数值。
+	 *
 	 * Look for a generic argument value that matches the given type.
 	 * @param requiredType the type to match
 	 * @return the ValueHolder for the argument, or {@code null} if none set
@@ -254,6 +295,8 @@ public class ConstructorArgumentValues {
 	}
 
 	/**
+	 * 寻找与给定类型匹配的泛型参数值
+	 *
 	 * Look for a generic argument value that matches the given type.
 	 * @param requiredType the type to match
 	 * @param requiredName the name to match
@@ -265,6 +308,8 @@ public class ConstructorArgumentValues {
 	}
 
 	/**
+	 * 寻找下一个匹配给定类型的泛型参数值，忽略当前解析过程中已经使用的参数值。
+	 *
 	 * Look for the next generic argument value that matches the given type,
 	 * ignoring argument values that have already been used in the current
 	 * resolution process.
@@ -300,6 +345,8 @@ public class ConstructorArgumentValues {
 	}
 
 	/**
+	 * 返回泛型参数值的列表。
+	 *
 	 * Return the list of generic argument values.
 	 * @return unmodifiable List of ValueHolders
 	 * @see ValueHolder
@@ -310,6 +357,8 @@ public class ConstructorArgumentValues {
 
 
 	/**
+	 * 在构造函数参数列表中查找与给定索引对应的参数值，或根据类型进行常规匹配的参数值。
+	 *
 	 * Look for an argument value that either corresponds to the given index
 	 * in the constructor argument list or generically matches by type.
 	 * @param index the index in the constructor argument list
@@ -322,6 +371,8 @@ public class ConstructorArgumentValues {
 	}
 
 	/**
+	 * 在构造函数参数列表中查找与给定索引对应的参数值，或根据类型进行常规匹配的参数值。
+	 *
 	 * Look for an argument value that either corresponds to the given index
 	 * in the constructor argument list or generically matches by type.
 	 * @param index the index in the constructor argument list
@@ -335,6 +386,8 @@ public class ConstructorArgumentValues {
 	}
 
 	/**
+	 * 在构造函数参数列表中查找与给定索引对应的参数值，或根据类型进行常规匹配的参数值。
+	 *
 	 * Look for an argument value that either corresponds to the given index
 	 * in the constructor argument list or generically matches by type.
 	 * @param index the index in the constructor argument list
@@ -359,6 +412,8 @@ public class ConstructorArgumentValues {
 	}
 
 	/**
+	 * 返回在这个实例中保存的参数值的数量，同时计算索引的和通用的参数值。
+	 *
 	 * Return the number of argument values held in this instance,
 	 * counting both indexed and generic argument values.
 	 */
@@ -367,6 +422,8 @@ public class ConstructorArgumentValues {
 	}
 
 	/**
+	 * 如果该占位符不包含任何实参值，则返回。
+	 *
 	 * Return if this holder does not contain any argument values,
 	 * neither indexed ones nor generic ones.
 	 */
@@ -375,6 +432,8 @@ public class ConstructorArgumentValues {
 	}
 
 	/**
+	 * 清除此占位符，删除所有实参值。
+	 *
 	 * Clear this holder, removing all argument values.
 	 */
 	public void clear() {
@@ -430,6 +489,8 @@ public class ConstructorArgumentValues {
 
 
 	/**
+	 * 一个可选类型属性，指示实际构造函数参数的目标类型。
+	 *
 	 * Holder for a constructor argument value, with an optional type
 	 * attribute indicating the target type of the actual constructor argument.
 	 */
@@ -528,6 +589,8 @@ public class ConstructorArgumentValues {
 		}
 
 		/**
+		 * 为这个元数据元素设置配置源{@code Object}。
+		 *
 		 * Set the configuration source {@code Object} for this metadata element.
 		 * <p>The exact type of the object will depend on the configuration mechanism used.
 		 */
@@ -542,6 +605,9 @@ public class ConstructorArgumentValues {
 		}
 
 		/**
+		 * 返回该容器是否已经包含转换后的值({@code true})，
+		 * 或者是否仍然需要转换值({@code false})。
+		 *
 		 * Return whether this holder contains a converted value already ({@code true}),
 		 * or whether the value still needs to be converted ({@code false}).
 		 */
@@ -550,6 +616,8 @@ public class ConstructorArgumentValues {
 		}
 
 		/**
+		 * 设置处理类型转换后的构造函数参数的转换值。
+		 *
 		 * Set the converted value of the constructor argument,
 		 * after processed type conversion.
 		 */
@@ -559,6 +627,8 @@ public class ConstructorArgumentValues {
 		}
 
 		/**
+		 * 在处理类型转换之后，返回构造函数参数的转换值。
+		 *
 		 * Return the converted value of the constructor argument,
 		 * after processed type conversion.
 		 */
@@ -568,6 +638,9 @@ public class ConstructorArgumentValues {
 		}
 
 		/**
+		 * 确定这个ValueHolder的内容是否等于给定的其他ValueHolder的内容。
+		 * 注意ValueHolder不直接实现{@code equals}，允许多个具有相同内容的ValueHolder实例驻留在同一个集合中。
+		 *
 		 * Determine whether the content of this ValueHolder is equal
 		 * to the content of the given other ValueHolder.
 		 * <p>Note that ValueHolder does not implement {@code equals}
@@ -580,6 +653,9 @@ public class ConstructorArgumentValues {
 		}
 
 		/**
+		 * 确定此ValueHolder内容的哈希码是否。
+		 * 注意ValueHolder不直接实现{@code hashCode}，允许具有相同内容的多个ValueHolder实例驻留在同一个集合中。
+		 *
 		 * Determine whether the hash code of the content of this ValueHolder.
 		 * <p>Note that ValueHolder does not implement {@code hashCode}
 		 * directly, to allow for multiple ValueHolder instances with the
@@ -590,6 +666,8 @@ public class ConstructorArgumentValues {
 		}
 
 		/**
+		 * 创建此ValueHolder的副本:即具有相同内容的独立ValueHolder实例。
+		 *
 		 * Create a copy of this ValueHolder: that is, an independent
 		 * ValueHolder instance with the same contents.
 		 */
