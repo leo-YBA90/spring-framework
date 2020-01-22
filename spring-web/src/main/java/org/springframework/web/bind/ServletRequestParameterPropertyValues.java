@@ -23,12 +23,19 @@ import org.springframework.lang.Nullable;
 import org.springframework.web.util.WebUtils;
 
 /**
+ * PropertyValues实现是由ServletRequest中的参数创建的。
+ * 可以查找以某个前缀和前缀分隔符开头的所有属性值(默认为“_”)。
+ *
  * PropertyValues implementation created from parameters in a ServletRequest.
  * Can look for all property values beginning with a certain prefix and
  * prefix separator (default is "_").
  *
+ * 例如，在前缀为“spring”的情况下，“spring_param1”和“spring_param2”会产生一个映射，其中“param1”和“param2”是键。
+ *
  * <p>For example, with a prefix of "spring", "spring_param1" and
  * "spring_param2" result in a Map with "param1" and "param2" as keys.
+ *
+ * 这个类不是不可变的，因此不能有效地删除绑定时应该忽略的属性值。
  *
  * <p>This class is not immutable to be able to efficiently remove property
  * values that should be ignored for binding.
@@ -40,11 +47,17 @@ import org.springframework.web.util.WebUtils;
 @SuppressWarnings("serial")
 public class ServletRequestParameterPropertyValues extends MutablePropertyValues {
 
-	/** Default prefix separator. */
+	/**
+	 * 默认前缀分离器。
+	 *
+	 * Default prefix separator.
+	 */
 	public static final String DEFAULT_PREFIX_SEPARATOR = "_";
 
 
 	/**
+	 * 不使用前缀(因此，不使用前缀分隔符)创建新的ServletRequestPropertyValues。
+	 *
 	 * Create new ServletRequestPropertyValues using no prefix
 	 * (and hence, no prefix separator).
 	 * @param request the HTTP request
