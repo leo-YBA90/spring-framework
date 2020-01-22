@@ -23,10 +23,17 @@ import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 
 /**
+ * 对象来保存单个bean属性的信息和值。
+ * 在这里使用一个对象，而不是仅仅将所有属性存储在一个按属性名键控的映射中，这样可以提供更大的灵活性，
+ * 并能够以优化的方式处理索引属性等。
+ *
  * Object to hold information and value for an individual bean property.
  * Using an object here, rather than just storing all properties in
  * a map keyed by property name, allows for more flexibility, and the
  * ability to handle indexed properties etc in an optimized way.
+ *
+ * 注意，这个值不需要是最终的必需类型:{@link BeanWrapper}实现应该处理任何必要的转换，
+ * 因为这个对象不知道它将应用到的对象的任何信息。
  *
  * <p>Note that the value doesn't need to be the final required type:
  * A {@link BeanWrapper} implementation should handle any necessary conversion,
@@ -54,11 +61,19 @@ public class PropertyValue extends BeanMetadataAttributeAccessor implements Seri
 	@Nullable
 	private Object convertedValue;
 
-	/** Package-visible field that indicates whether conversion is necessary. */
+	/**
+	 * 包可见字段，指示是否需要转换。
+	 *
+	 * Package-visible field that indicates whether conversion is necessary.
+	 */
 	@Nullable
 	volatile Boolean conversionNecessary;
 
-	/** Package-visible field for caching the resolved property path tokens. */
+	/**
+	 * 用于缓存已解析的属性路径令牌的包可见字段。
+	 *
+	 * Package-visible field for caching the resolved property path tokens.
+	 */
 	@Nullable
 	transient volatile Object resolvedTokens;
 
@@ -110,6 +125,8 @@ public class PropertyValue extends BeanMetadataAttributeAccessor implements Seri
 
 
 	/**
+	 * 返回属性的名称。
+	 *
 	 * Return the name of the property.
 	 */
 	public String getName() {
@@ -117,6 +134,8 @@ public class PropertyValue extends BeanMetadataAttributeAccessor implements Seri
 	}
 
 	/**
+	 * 返回属性的值。注意，这里不会发生类型转换。执行类型转换是BeanWrapper实现的职责。
+	 *
 	 * Return the value of the property.
 	 * <p>Note that type conversion will <i>not</i> have occurred here.
 	 * It is the responsibility of the BeanWrapper implementation to
@@ -128,6 +147,8 @@ public class PropertyValue extends BeanMetadataAttributeAccessor implements Seri
 	}
 
 	/**
+	 * 返回此值持有者的原始PropertyValue实例。
+	 *
 	 * Return the original PropertyValue instance for this value holder.
 	 * @return the original PropertyValue (either a source of this
 	 * value holder or this value holder itself).
@@ -143,6 +164,8 @@ public class PropertyValue extends BeanMetadataAttributeAccessor implements Seri
 	}
 
 	/**
+	 * 设置该值是否为可选值，即在目标类上不存在相应属性时忽略该值。
+	 *
 	 * Set whether this is an optional value, that is, to be ignored
 	 * when no corresponding property exists on the target class.
 	 * @since 3.0
@@ -152,6 +175,8 @@ public class PropertyValue extends BeanMetadataAttributeAccessor implements Seri
 	}
 
 	/**
+	 * 返回该值是否为可选值，即在目标类上不存在相应属性时忽略该值。
+	 *
 	 * Return whether this is an optional value, that is, to be ignored
 	 * when no corresponding property exists on the target class.
 	 * @since 3.0
@@ -161,6 +186,8 @@ public class PropertyValue extends BeanMetadataAttributeAccessor implements Seri
 	}
 
 	/**
+	 * 返回该容器是否已经包含转换后的值({@code true})，或者该值是否仍然需要转换({@code false})。
+	 *
 	 * Return whether this holder contains a converted value already ({@code true}),
 	 * or whether the value still needs to be converted ({@code false}).
 	 */
@@ -169,6 +196,8 @@ public class PropertyValue extends BeanMetadataAttributeAccessor implements Seri
 	}
 
 	/**
+	 * 设置处理类型转换后此属性值的转换值。
+	 *
 	 * Set the converted value of this property value,
 	 * after processed type conversion.
 	 */
@@ -178,6 +207,8 @@ public class PropertyValue extends BeanMetadataAttributeAccessor implements Seri
 	}
 
 	/**
+	 * 处理类型转换后，返回此属性值的转换值。
+	 *
 	 * Return the converted value of this property value,
 	 * after processed type conversion.
 	 */
