@@ -29,6 +29,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.MultiValueMap;
 
 /**
+ * 定义对特定类型({@link AnnotationMetadata class}或{@link MethodMetadata method})的注释的访问，其形式不一定需要类加载。
+ *
  * Defines access to the annotations of a specific type ({@link AnnotationMetadata class}
  * or {@link MethodMetadata method}), in a form that does not necessarily require the
  * class-loading.
@@ -46,6 +48,8 @@ import org.springframework.util.MultiValueMap;
 public interface AnnotatedTypeMetadata {
 
 	/**
+	 * 基于基础元素的直接注释返回注释细节。
+	 *
 	 * Return annotation details based on the direct annotations of the
 	 * underlying element.
 	 * @return merged annotations based on the direct annotations
@@ -54,6 +58,9 @@ public interface AnnotatedTypeMetadata {
 	MergedAnnotations getAnnotations();
 
 	/**
+	 * 确定基础元素是否定义了给定类型的注释或元注释。
+	 * 如果这个方法返回{@code true}，那么{@link #getAnnotationAttributes}将返回一个非空映射。
+	 *
 	 * Determine whether the underlying element has an annotation or meta-annotation
 	 * of the given type defined.
 	 * <p>If this method returns {@code true}, then
@@ -67,6 +74,8 @@ public interface AnnotatedTypeMetadata {
 	}
 
 	/**
+	 * 检索给定类型的注释的属性(例如，如果在底层元素上定义了属性，则为直接注释或元注释)，同时考虑对复合注释的属性覆盖。
+	 *
 	 * Retrieve the attributes of the annotation of the given type, if any (i.e. if
 	 * defined on the underlying element, as direct annotation or meta-annotation),
 	 * also taking attribute overrides on composed annotations into account.
@@ -82,6 +91,8 @@ public interface AnnotatedTypeMetadata {
 	}
 
 	/**
+	 * 检索给定类型的注释的属性(例如，如果在底层元素上定义了属性，则为直接注释或元注释)，同时考虑对复合注释的属性覆盖。
+	 *
 	 * Retrieve the attributes of the annotation of the given type, if any (i.e. if
 	 * defined on the underlying element, as direct annotation or meta-annotation),
 	 * also taking attribute overrides on composed annotations into account.
@@ -107,6 +118,8 @@ public interface AnnotatedTypeMetadata {
 	}
 
 	/**
+	 * 检索给定类型的所有注释的所有属性(例如，如果在底层元素上定义了直接注释或元注释)。注意，此变体不考虑属性覆盖。
+	 *
 	 * Retrieve all attributes of all annotations of the given type, if any (i.e. if
 	 * defined on the underlying element, as direct annotation or meta-annotation).
 	 * Note that this variant does <i>not</i> take attribute overrides into account.
@@ -123,6 +136,8 @@ public interface AnnotatedTypeMetadata {
 	}
 
 	/**
+	 * 检索给定类型的所有注释的所有属性(例如，如果在底层元素上定义了直接注释或元注释)。注意，此变体不考虑属性覆盖。
+	 *
 	 * Retrieve all attributes of all annotations of the given type, if any (i.e. if
 	 * defined on the underlying element, as direct annotation or meta-annotation).
 	 * Note that this variant does <i>not</i> take attribute overrides into account.
