@@ -17,8 +17,12 @@
 package org.springframework.cglib.core;
 
 /**
+ * CGLIB的{@link DefaultNamingPolicy}的自定义扩展，将生成的类名中的标记从“ByCGLIB”修改为“BySpringCGLIB”。
+ *
  * Custom extension of CGLIB's {@link DefaultNamingPolicy}, modifying
  * the tag in generated class names from "ByCGLIB" to "BySpringCGLIB".
+ *
+ * 这主要是为了避免一个常规的CGLIB版本(被其他一些库使用)和Spring的嵌入版本之间的冲突，以防相同的类被代理为不同的目的。
  *
  * <p>This is primarily designed to avoid clashes between a regular CGLIB
  * version (used by some other library) and Spring's embedded variant,
