@@ -27,10 +27,16 @@ import org.springframework.asm.Type;
 import org.springframework.cglib.core.internal.CustomizerRegistry;
 
 /**
+ * 生成处理多值键的类，用于映射和集合等。equals和hashCode方法的代码遵循Joshua Bloch在Effective Java中列出的规则。
+ *
  * Generates classes to handle multi-valued keys, for use in things such as Maps and Sets.
  * Code for <code>equals</code> and <code>hashCode</code> methods follow the
  * the rules laid out in <i>Effective Java</i> by Joshua Bloch.
  * <p>
+ *
+ * 要生成KeyFactory，您需要提供一个描述密钥结构的接口。接口应该有一个名为newInstance的方法，
+ * 它返回一个Object。参数数组可以是任意——对象、基元值、或任意一个的单维或多维数组。例如:
+ *
  * To generate a <code>KeyFactory</code>, you need to supply an interface which
  * describes the structure of the key. The interface should have a
  * single method named <code>newInstance</code>, which returns an
@@ -42,6 +48,8 @@ import org.springframework.cglib.core.internal.CustomizerRegistry;
  *         public Object newInstance(int i, String s);
  *     }
  * </pre><p>
+ * 一旦创建了KeyFactory，就可以通过调用接口定义的newInstance方法来生成新密钥。
+ *
  * Once you have made a <code>KeyFactory</code>, you generate a new key by calling
  * the <code>newInstance</code> method defined by your interface.
  * <p><pre>
@@ -50,6 +58,7 @@ import org.springframework.cglib.core.internal.CustomizerRegistry;
  *     Object key2 = factory.newInstance(4, "World");
  * </pre><p>
  * <b>Note:</b>
+ * 只有key1.equals(key2)和钥匙是由同一家工厂生产的，才能保证key1和key2之间的hashCode相等。
  * <code>hashCode</code> equality between two keys <code>key1</code> and <code>key2</code> is only guaranteed if
  * <code>key1.equals(key2)</code> <i>and</i> the keys were produced by the same factory.
  * @version $Id: KeyFactory.java,v 1.26 2006/03/05 02:43:19 herbyderby Exp $
@@ -81,7 +90,7 @@ abstract public class KeyFactory {
 	private static final Signature GET_SORT =
 			TypeUtils.parseSignature("int getSort()");
 
-	//generated numbers:
+	//generated numbers:素数
 	private final static int PRIMES[] = {
 			11, 73, 179, 331,
 			521, 787, 1213, 1823,
@@ -121,6 +130,9 @@ abstract public class KeyFactory {
 	};
 
 	/**
+	 * {@link Type#hashCode()}非常昂贵，因为它遍历完整描述符来计算散列代码。
+	 * 此自定义程序使用{@link Type#getSort()}作为散列代码。
+	 *
 	 * {@link Type#hashCode()} is very expensive as it traverses full descriptor to calculate hash code.
 	 * This customizer uses {@link Type#getSort()} as a hash code.
 	 */
