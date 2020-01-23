@@ -17,6 +17,9 @@
 package org.springframework.cglib.core;
 
 /**
+ * CGLIB GeneratorStrategy变体，在类生成时将应用程序类装入器公开为当前线程上下文类装入器。
+ * Spring的ASM变体中的ASM ClassWriter将在执行公共超类解析时获取它。
+ *
  * CGLIB GeneratorStrategy variant which exposes the application ClassLoader
  * as current thread context ClassLoader for the time of class generation.
  * The ASM ClassWriter in Spring's ASM variant will pick it up when doing
@@ -33,6 +36,10 @@ public class ClassLoaderAwareGeneratorStrategy extends DefaultGeneratorStrategy 
 		this.classLoader = classLoader;
 	}
 
+	/**
+	 * 生成类生成器，并把他放入到当前线程中
+	 * @throws Exception
+	 */
 	@Override
 	public byte[] generate(ClassGenerator cg) throws Exception {
 		if (this.classLoader == null) {
