@@ -28,6 +28,8 @@
 package org.springframework.asm;
 
 /**
+ * 动态扩展的字节vector。这个类大致相当于ByteArrayOutputStream之上的DataOutputStream，但是更高效。
+ *
  * A dynamically extensible vector of bytes. This class is roughly equivalent to a DataOutputStream
  * on top of a ByteArrayOutputStream, but is more efficient.
  *
@@ -35,9 +37,14 @@ package org.springframework.asm;
  */
 public class ByteVector {
 
-	/** The content of this vector. Only the first {@link #length} bytes contain real data. */
+	/**
+	 * 这个向量的内容。只有第一个{@link #length}字节包含实际数据。
+	 *
+	 * The content of this vector. Only the first {@link #length} bytes contain real data.
+	 */
 	byte[] data;
 
+	/** 这个向量中实际的字节数。 */
 	/** The actual number of bytes in this vector. */
 	int length;
 
@@ -66,6 +73,8 @@ public class ByteVector {
 	}
 
 	/**
+	 * 将一个字节放入这个字节向量。如果需要，字节向量将自动扩大。
+	 *
 	 * Puts a byte into this byte vector. The byte vector is automatically enlarged if necessary.
 	 *
 	 * @param byteValue a byte.
@@ -82,6 +91,8 @@ public class ByteVector {
 	}
 
 	/**
+	 * 将两个字节放入这个字节向量。如果需要，字节向量将自动扩大。
+	 *
 	 * Puts two bytes into this byte vector. The byte vector is automatically enlarged if necessary.
 	 *
 	 * @param byteValue1 a byte.
@@ -101,6 +112,8 @@ public class ByteVector {
 	}
 
 	/**
+	 * 把一个简短的字节向量。如果需要，字节向量将自动扩大。
+	 *
 	 * Puts a short into this byte vector. The byte vector is automatically enlarged if necessary.
 	 *
 	 * @param shortValue a short.
@@ -119,6 +132,8 @@ public class ByteVector {
 	}
 
 	/**
+	 * 将一个字节和一个short放入这个字节向量中。如果需要，字节向量将自动扩大。
+	 *
 	 * Puts a byte and a short into this byte vector. The byte vector is automatically enlarged if
 	 * necessary.
 	 *
@@ -140,6 +155,8 @@ public class ByteVector {
 	}
 
 	/**
+	 * 将两个字节和一个short放入这个字节向量中。如果需要，字节向量将自动扩大。
+	 *
 	 * Puts two bytes and a short into this byte vector. The byte vector is automatically enlarged if
 	 * necessary.
 	 *
@@ -163,6 +180,8 @@ public class ByteVector {
 	}
 
 	/**
+	 * 将一个int放入这个字节向量中。如果需要，字节向量将自动扩大。
+	 *
 	 * Puts an int into this byte vector. The byte vector is automatically enlarged if necessary.
 	 *
 	 * @param intValue an int.
@@ -183,6 +202,8 @@ public class ByteVector {
 	}
 
 	/**
+	 * 将一个字节和两个短裤放入这个字节向量中。如果需要，字节向量将自动扩大。
+	 *
 	 * Puts one byte and two shorts into this byte vector. The byte vector is automatically enlarged
 	 * if necessary.
 	 *
@@ -207,6 +228,8 @@ public class ByteVector {
 	}
 
 	/**
+	 * 在这个字节向量中放入一个long。如果需要，字节向量将自动扩大。
+	 *
 	 * Puts a long into this byte vector. The byte vector is automatically enlarged if necessary.
 	 *
 	 * @param longValue a long.
@@ -233,6 +256,8 @@ public class ByteVector {
 	}
 
 	/**
+	 * 将UTF8字符串放入这个字节向量中。如果需要，字节向量将自动扩大。
+	 *
 	 * Puts an UTF8 string into this byte vector. The byte vector is automatically enlarged if
 	 * necessary.
 	 *
@@ -270,6 +295,9 @@ public class ByteVector {
 	}
 
 	/**
+	 * 将UTF8字符串放入这个字节向量中。如果需要，字节向量将自动扩大。字符串长度以两个字节编码在编码字符之前，
+	 * 如果有空间(即如果这个。长度-偏移量- 2 > = 0)。
+	 *
 	 * Puts an UTF8 string into this byte vector. The byte vector is automatically enlarged if
 	 * necessary. The string length is encoded in two bytes before the encoded characters, if there is
 	 * space for that (i.e. if this.length - offset - 2 &gt;= 0).
@@ -325,6 +353,8 @@ public class ByteVector {
 	}
 
 	/**
+	 * 将一个字节数组放入这个字节向量中。如果需要，字节向量将自动扩大。
+	 *
 	 * Puts an array of bytes into this byte vector. The byte vector is automatically enlarged if
 	 * necessary.
 	 *
@@ -347,6 +377,8 @@ public class ByteVector {
 	}
 
 	/**
+	 * 放大这个字节向量，以便它可以接收更多的“size”的字节。
+	 *
 	 * Enlarges this byte vector so that it can receive 'size' more bytes.
 	 *
 	 * @param size number of additional bytes that this byte vector should be able to receive.
