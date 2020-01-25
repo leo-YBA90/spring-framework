@@ -28,6 +28,8 @@
 package org.springframework.asm;
 
 /**
+ * Java虚拟机规范(JVMS)中定义的非标准类、字段、方法或代码属性。
+ *
  * A non standard class, field, method or Code attribute, as defined in the Java Virtual Machine
  * Specification (JVMS).
  *
@@ -40,6 +42,7 @@ package org.springframework.asm;
  */
 public class Attribute {
 
+  /** 此属性的类型，在jvm中也称为其名称。 */
   /** The type of this attribute, also called its name in the JVMS. */
   public final String type;
 
@@ -51,6 +54,8 @@ public class Attribute {
   private byte[] content;
 
   /**
+   * 此属性列表中的下一个属性(可以通过此字段链接属性实例来存储类、字段、方法或代码属性的列表)。可以是{@literal null}。
+   *
    * The next attribute in this attribute list (Attribute instances can be linked via this field to
    * store a list of class, field, method or Code attributes). May be {@literal null}.
    */
@@ -66,6 +71,10 @@ public class Attribute {
   }
 
   /**
+   * 如果属性类型未知，则返回{@literal true}。这意味着不能解析属性内容来提取常量池引用、标签等。
+   * 相反，属性内容作为不透明的字节数组读取，并按原样写回。如果内容实际上包含常量池引用、标签或其他需要在常量池、
+   * 方法字节码等发生更改时更新的符号引用，则可能导致无效的属性。这个方法的默认实现总是返回{@literal true}。
+   *
    * Returns {@literal true} if this type of attribute is unknown. This means that the attribute
    * content can't be parsed to extract constant pool references, labels, etc. Instead, the
    * attribute content is read as an opaque byte array, and written back as is. This can lead to
@@ -80,6 +89,8 @@ public class Attribute {
   }
 
   /**
+   * 如果此类型的属性是代码属性，则返回{@literal true}。
+   *
    * Returns {@literal true} if this type of attribute is a Code attribute.
    *
    * @return {@literal true} if this type of attribute is a Code attribute.
@@ -89,6 +100,8 @@ public class Attribute {
   }
 
   /**
+   * 返回与此属性对应的标签。
+   *
    * Returns the labels corresponding to this attribute.
    *
    * @return the labels corresponding to this attribute, or {@literal null} if this attribute is not
@@ -99,6 +112,9 @@ public class Attribute {
   }
 
   /**
+   * 读取{@link #type}属性。这个方法必须返回一个新的{@link Attribute}对象，类型为{@link #type}，
+   * 对应于给定的ClassReader中从'offset'开始的'length'字节。
+   *
    * Reads a {@link #type} attribute. This method must return a <i>new</i> {@link Attribute} object,
    * of type {@link #type}, corresponding to the 'length' bytes starting at 'offset', in the given
    * ClassReader.
@@ -132,6 +148,8 @@ public class Attribute {
   }
 
   /**
+   * 返回此属性内容的字节数组形式。不能在返回的ByteVector中添加6个头字节(attribute_name_index和attribute_length)。
+   *
    * Returns the byte array form of the content of this attribute. The 6 header bytes
    * (attribute_name_index and attribute_length) must <i>not</i> be added in the returned
    * ByteVector.
@@ -160,6 +178,8 @@ public class Attribute {
   }
 
   /**
+   * 返回以该属性开头的属性列表的属性数。
+   *
    * Returns the number of attributes of the attribute list that begins with this attribute.
    *
    * @return the number of attributes of the attribute list that begins with this attribute.
@@ -175,6 +195,9 @@ public class Attribute {
   }
 
   /**
+   * 返回以该属性开头的属性列表中所有属性的总大小(以字节为单位)。这个大小包括每个属性的6个头字节(attribute_name_index和attribute_length)。
+   * 还将属性类型名称添加到常量池中。
+   *
    * Returns the total size in bytes of all the attributes in the attribute list that begins with
    * this attribute. This size includes the 6 header bytes (attribute_name_index and
    * attribute_length) per attribute. Also adds the attribute type names to the constant pool.
@@ -192,6 +215,9 @@ public class Attribute {
   }
 
   /**
+   * 返回以该属性开头的属性列表中所有属性的总大小(以字节为单位)。这个大小包括每个属性的6个头字节(attribute_name_index和attribute_length)。
+   * 还将属性类型名称添加到常量池中。
+   *
    * Returns the total size in bytes of all the attributes in the attribute list that begins with
    * this attribute. This size includes the 6 header bytes (attribute_name_index and
    * attribute_length) per attribute. Also adds the attribute type names to the constant pool.
@@ -228,6 +254,9 @@ public class Attribute {
   }
 
   /**
+   * 返回与给定字段、方法或类访问标志和签名对应的所有属性的总大小(以字节为单位)。
+   * 这个大小包括每个属性的6个头字节(attribute_name_index和attribute_length)。还将属性类型名称添加到常量池中。
+   *
    * Returns the total size in bytes of all the attributes that correspond to the given field,
    * method or class access flags and signature. This size includes the 6 header bytes
    * (attribute_name_index and attribute_length) per attribute. Also adds the attribute type names
@@ -264,6 +293,8 @@ public class Attribute {
   }
 
   /**
+   * 将以该属性开头的属性列表的所有属性放在给定的字节向量中。这包括每个属性的6个头字节(attribute_name_index和attribute_length)。
+   *
    * Puts all the attributes of the attribute list that begins with this attribute, in the given
    * byte vector. This includes the 6 header bytes (attribute_name_index and attribute_length) per
    * attribute.
@@ -280,6 +311,8 @@ public class Attribute {
   }
 
   /**
+   * 将以该属性开头的属性列表的所有属性放在给定的字节向量中。这包括每个属性的6个头字节(attribute_name_index和attribute_length)。
+   *
    * Puts all the attributes of the attribute list that begins with this attribute, in the given
    * byte vector. This includes the 6 header bytes (attribute_name_index and attribute_length) per
    * attribute.
@@ -317,6 +350,9 @@ public class Attribute {
   }
 
   /**
+   * 将与给定字段、方法或类访问标志和签名对应的所有属性放在给定的字节向量中。
+   * 这包括每个属性的6个头字节(attribute_name_index和attribute_length)。
+   *
    * Puts all the attributes that correspond to the given field, method or class access flags and
    * signature, in the given byte vector. This includes the 6 header bytes (attribute_name_index and
    * attribute_length) per attribute.
@@ -347,6 +383,7 @@ public class Attribute {
     }
   }
 
+  /** 一组属性原型(具有相同类型的属性被认为是相等的)。 */
   /** A set of attribute prototypes (attributes with the same type are considered equal). */
   static final class Set {
 
