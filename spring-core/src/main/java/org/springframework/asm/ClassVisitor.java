@@ -28,6 +28,11 @@
 package org.springframework.asm;
 
 /**
+ * 访问Java类的访问者。这个类的方法必须按照以下顺序调用:{@code visit} [{@code visitSource}][{@code visitModule}]
+ * [{@code visitNestHost}][{@code visitOuterClass}] ({@code visitAnnotation} | {@code visitTypeAnnotation} |
+ * {@code visitAttribute})* ({@code visitNestMember} | {@code visitInnerClass} | {@code visitField} | {@code visitMethod})*
+ * {@code visitEnd}.
+ *
  * A visitor to visit a Java class. The methods of this class must be called in the following order:
  * {@code visit} [ {@code visitSource} ] [ {@code visitModule} ][ {@code visitNestHost} ][ {@code
  * visitOuterClass} ] ( {@code visitAnnotation} | {@code visitTypeAnnotation} | {@code
@@ -38,292 +43,324 @@ package org.springframework.asm;
  */
 public abstract class ClassVisitor {
 
-  /**
-   * The ASM API version implemented by this visitor. The value of this field must be one of {@link
-   * Opcodes#ASM4}, {@link Opcodes#ASM5}, {@link Opcodes#ASM6} or {@link Opcodes#ASM7}.
-   */
-  protected final int api;
+	/**
+	 * 这个访问者实现的ASM API版本。该字段的值必须是{@link Opcodes#ASM4}、{@link Opcodes#ASM5}、
+	 * {@link Opcodes#ASM6}或{@link Opcodes#ASM7}中的一个。
+	 *
+	 * The ASM API version implemented by this visitor. The value of this field must be one of {@link
+	 * Opcodes#ASM4}, {@link Opcodes#ASM5}, {@link Opcodes#ASM6} or {@link Opcodes#ASM7}.
+	 */
+	protected final int api;
 
-  /** The class visitor to which this visitor must delegate method calls. May be {@literal null}. */
-  protected ClassVisitor cv;
+	/** 类访问器，此访问器必须将方法调用委托给该类访问器。可以是{@literal null} */
+	/** The class visitor to which this visitor must delegate method calls. May be {@literal null}. */
+	protected ClassVisitor cv;
 
-  /**
-   * Constructs a new {@link ClassVisitor}.
-   *
-   * @param api the ASM API version implemented by this visitor. Must be one of {@link
-   *     Opcodes#ASM4}, {@link Opcodes#ASM5}, {@link Opcodes#ASM6} or {@link Opcodes#ASM7}.
-   */
-  public ClassVisitor(final int api) {
-    this(api, null);
-  }
+	/**
+	 * Constructs a new {@link ClassVisitor}.
+	 *
+	 * @param api the ASM API version implemented by this visitor. Must be one of {@link
+	 *     Opcodes#ASM4}, {@link Opcodes#ASM5}, {@link Opcodes#ASM6} or {@link Opcodes#ASM7}.
+	 */
+	public ClassVisitor(final int api) {
+		this(api, null);
+	}
 
-  /**
-   * Constructs a new {@link ClassVisitor}.
-   *
-   * @param api the ASM API version implemented by this visitor. Must be one of {@link
-   *     Opcodes#ASM4}, {@link Opcodes#ASM5}, {@link Opcodes#ASM6} or {@link Opcodes#ASM7}.
-   * @param classVisitor the class visitor to which this visitor must delegate method calls. May be
-   *     null.
-   */
-  public ClassVisitor(final int api, final ClassVisitor classVisitor) {
-    if (api != Opcodes.ASM7 && api != Opcodes.ASM6 && api != Opcodes.ASM5 && api != Opcodes.ASM4) {
-      throw new IllegalArgumentException("Unsupported api " + api);
-    }
-    this.api = api;
-    this.cv = classVisitor;
-  }
+	/**
+	 * Constructs a new {@link ClassVisitor}.
+	 *
+	 * @param api the ASM API version implemented by this visitor. Must be one of {@link
+	 *     Opcodes#ASM4}, {@link Opcodes#ASM5}, {@link Opcodes#ASM6} or {@link Opcodes#ASM7}.
+	 * @param classVisitor the class visitor to which this visitor must delegate method calls. May be
+	 *     null.
+	 */
+	public ClassVisitor(final int api, final ClassVisitor classVisitor) {
+		if (api != Opcodes.ASM7 && api != Opcodes.ASM6 && api != Opcodes.ASM5 && api != Opcodes.ASM4) {
+			throw new IllegalArgumentException("Unsupported api " + api);
+		}
+		this.api = api;
+		this.cv = classVisitor;
+	}
 
-  /**
-   * Visits the header of the class.
-   *
-   * @param version the class version. The minor version is stored in the 16 most significant bits,
-   *     and the major version in the 16 least significant bits.
-   * @param access the class's access flags (see {@link Opcodes}). This parameter also indicates if
-   *     the class is deprecated.
-   * @param name the internal name of the class (see {@link Type#getInternalName()}).
-   * @param signature the signature of this class. May be {@literal null} if the class is not a
-   *     generic one, and does not extend or implement generic classes or interfaces.
-   * @param superName the internal of name of the super class (see {@link Type#getInternalName()}).
-   *     For interfaces, the super class is {@link Object}. May be {@literal null}, but only for the
-   *     {@link Object} class.
-   * @param interfaces the internal names of the class's interfaces (see {@link
-   *     Type#getInternalName()}). May be {@literal null}.
-   */
-  public void visit(
-      final int version,
-      final int access,
-      final String name,
-      final String signature,
-      final String superName,
-      final String[] interfaces) {
-    if (cv != null) {
-      cv.visit(version, access, name, signature, superName, interfaces);
-    }
-  }
+	/**
+	 * 访问类的header
+	 * Visits the header of the class.
+	 *
+	 * @param version the class version. The minor version is stored in the 16 most significant bits,
+	 *     and the major version in the 16 least significant bits.
+	 * @param access the class's access flags (see {@link Opcodes}). This parameter also indicates if
+	 *     the class is deprecated.
+	 * @param name the internal name of the class (see {@link Type#getInternalName()}).
+	 * @param signature the signature of this class. May be {@literal null} if the class is not a
+	 *     generic one, and does not extend or implement generic classes or interfaces.
+	 * @param superName the internal of name of the super class (see {@link Type#getInternalName()}).
+	 *     For interfaces, the super class is {@link Object}. May be {@literal null}, but only for the
+	 *     {@link Object} class.
+	 * @param interfaces the internal names of the class's interfaces (see {@link
+	 *     Type#getInternalName()}). May be {@literal null}.
+	 */
+	public void visit(
+			final int version,
+			final int access,
+			final String name,
+			final String signature,
+			final String superName,
+			final String[] interfaces) {
+		if (cv != null) {
+			cv.visit(version, access, name, signature, superName, interfaces);
+		}
+	}
 
-  /**
-   * Visits the source of the class.
-   *
-   * @param source the name of the source file from which the class was compiled. May be {@literal
-   *     null}.
-   * @param debug additional debug information to compute the correspondence between source and
-   *     compiled elements of the class. May be {@literal null}.
-   */
-  public void visitSource(final String source, final String debug) {
-    if (cv != null) {
-      cv.visitSource(source, debug);
-    }
-  }
+	/**
+	 * 访问类的source
+	 *
+	 * Visits the source of the class.
+	 *
+	 * @param source the name of the source file from which the class was compiled. May be {@literal
+	 *     null}.
+	 * @param debug additional debug information to compute the correspondence between source and
+	 *     compiled elements of the class. May be {@literal null}.
+	 */
+	public void visitSource(final String source, final String debug) {
+		if (cv != null) {
+			cv.visitSource(source, debug);
+		}
+	}
 
-  /**
-   * Visit the module corresponding to the class.
-   *
-   * @param name the fully qualified name (using dots) of the module.
-   * @param access the module access flags, among {@code ACC_OPEN}, {@code ACC_SYNTHETIC} and {@code
-   *     ACC_MANDATED}.
-   * @param version the module version, or {@literal null}.
-   * @return a visitor to visit the module values, or {@literal null} if this visitor is not
-   *     interested in visiting this module.
-   */
-  public ModuleVisitor visitModule(final String name, final int access, final String version) {
-    if (api < Opcodes.ASM6) {
-      throw new UnsupportedOperationException("This feature requires ASM6");
-    }
-    if (cv != null) {
-      return cv.visitModule(name, access, version);
-    }
-    return null;
-  }
+	/**
+	 * 访问与类对应的模块。
+	 *
+	 * Visit the module corresponding to the class.
+	 *
+	 * @param name the fully qualified name (using dots) of the module.
+	 * @param access the module access flags, among {@code ACC_OPEN}, {@code ACC_SYNTHETIC} and {@code
+	 *     ACC_MANDATED}.
+	 * @param version the module version, or {@literal null}.
+	 * @return a visitor to visit the module values, or {@literal null} if this visitor is not
+	 *     interested in visiting this module.
+	 */
+	public ModuleVisitor visitModule(final String name, final int access, final String version) {
+		if (api < Opcodes.ASM6) {
+			throw new UnsupportedOperationException("This feature requires ASM6");
+		}
+		if (cv != null) {
+			return cv.visitModule(name, access, version);
+		}
+		return null;
+	}
 
-  /**
-   * Visits the nest host class of the class. A nest is a set of classes of the same package that
-   * share access to their private members. One of these classes, called the host, lists the other
-   * members of the nest, which in turn should link to the host of their nest. This method must be
-   * called only once and only if the visited class is a non-host member of a nest. A class is
-   * implicitly its own nest, so it's invalid to call this method with the visited class name as
-   * argument.
-   *
-   * @param nestHost the internal name of the host class of the nest.
-   */
-  public void visitNestHost(final String nestHost) {
-    if (api < Opcodes.ASM7) {
-      throw new UnsupportedOperationException("This feature requires ASM7");
-    }
-    if (cv != null) {
-      cv.visitNestHost(nestHost);
-    }
-  }
+	/**
+	 * 访问类的nest主机类。nest是同一包的一组类，它们共享对私有成员的访问。其中一个类，称为host，
+	 * 列出了nest的其他成员，这些成员应该链接到它们nest的主机。必须只调用此方法一次，且仅在所访问的类是巢的非宿主成员时才调用。
+	 * 一个类隐式地是它自己的嵌套，所以用访问过的类名作为参数来调用这个方法是无效的。
+	 *
+	 * Visits the nest host class of the class. A nest is a set of classes of the same package that
+	 * share access to their private members. One of these classes, called the host, lists the other
+	 * members of the nest, which in turn should link to the host of their nest. This method must be
+	 * called only once and only if the visited class is a non-host member of a nest. A class is
+	 * implicitly its own nest, so it's invalid to call this method with the visited class name as
+	 * argument.
+	 *
+	 * @param nestHost the internal name of the host class of the nest.
+	 */
+	public void visitNestHost(final String nestHost) {
+		if (api < Opcodes.ASM7) {
+			throw new UnsupportedOperationException("This feature requires ASM7");
+		}
+		if (cv != null) {
+			cv.visitNestHost(nestHost);
+		}
+	}
 
-  /**
-   * Visits the enclosing class of the class. This method must be called only if the class has an
-   * enclosing class.
-   *
-   * @param owner internal name of the enclosing class of the class.
-   * @param name the name of the method that contains the class, or {@literal null} if the class is
-   *     not enclosed in a method of its enclosing class.
-   * @param descriptor the descriptor of the method that contains the class, or {@literal null} if
-   *     the class is not enclosed in a method of its enclosing class.
-   */
-  public void visitOuterClass(final String owner, final String name, final String descriptor) {
-    if (cv != null) {
-      cv.visitOuterClass(owner, name, descriptor);
-    }
-  }
+	/**
+	 * 访问类的封闭类。仅当类具有封闭类时，才必须调用此方法。
+	 *
+	 * Visits the enclosing class of the class. This method must be called only if the class has an
+	 * enclosing class.
+	 *
+	 * @param owner internal name of the enclosing class of the class.
+	 * @param name the name of the method that contains the class, or {@literal null} if the class is
+	 *     not enclosed in a method of its enclosing class.
+	 * @param descriptor the descriptor of the method that contains the class, or {@literal null} if
+	 *     the class is not enclosed in a method of its enclosing class.
+	 */
+	public void visitOuterClass(final String owner, final String name, final String descriptor) {
+		if (cv != null) {
+			cv.visitOuterClass(owner, name, descriptor);
+		}
+	}
 
-  /**
-   * Visits an annotation of the class.
-   *
-   * @param descriptor the class descriptor of the annotation class.
-   * @param visible {@literal true} if the annotation is visible at runtime.
-   * @return a visitor to visit the annotation values, or {@literal null} if this visitor is not
-   *     interested in visiting this annotation.
-   */
-  public AnnotationVisitor visitAnnotation(final String descriptor, final boolean visible) {
-    if (cv != null) {
-      return cv.visitAnnotation(descriptor, visible);
-    }
-    return null;
-  }
+	/**
+	 * 访问类的注解
+	 * Visits an annotation of the class.
+	 *
+	 * @param descriptor the class descriptor of the annotation class.
+	 * @param visible {@literal true} if the annotation is visible at runtime.
+	 * @return a visitor to visit the annotation values, or {@literal null} if this visitor is not
+	 *     interested in visiting this annotation.
+	 */
+	public AnnotationVisitor visitAnnotation(final String descriptor, final boolean visible) {
+		if (cv != null) {
+			return cv.visitAnnotation(descriptor, visible);
+		}
+		return null;
+	}
 
-  /**
-   * Visits an annotation on a type in the class signature.
-   *
-   * @param typeRef a reference to the annotated type. The sort of this type reference must be
-   *     {@link TypeReference#CLASS_TYPE_PARAMETER}, {@link
-   *     TypeReference#CLASS_TYPE_PARAMETER_BOUND} or {@link TypeReference#CLASS_EXTENDS}. See
-   *     {@link TypeReference}.
-   * @param typePath the path to the annotated type argument, wildcard bound, array element type, or
-   *     static inner type within 'typeRef'. May be {@literal null} if the annotation targets
-   *     'typeRef' as a whole.
-   * @param descriptor the class descriptor of the annotation class.
-   * @param visible {@literal true} if the annotation is visible at runtime.
-   * @return a visitor to visit the annotation values, or {@literal null} if this visitor is not
-   *     interested in visiting this annotation.
-   */
-  public AnnotationVisitor visitTypeAnnotation(
-      final int typeRef, final TypePath typePath, final String descriptor, final boolean visible) {
-    if (api < Opcodes.ASM5) {
-      throw new UnsupportedOperationException("This feature requires ASM5");
-    }
-    if (cv != null) {
-      return cv.visitTypeAnnotation(typeRef, typePath, descriptor, visible);
-    }
-    return null;
-  }
+	/**
+	 * 访问类签名中类型的注释。
+	 *
+	 * Visits an annotation on a type in the class signature.
+	 *
+	 * @param typeRef a reference to the annotated type. The sort of this type reference must be
+	 *     {@link TypeReference#CLASS_TYPE_PARAMETER}, {@link
+	 *     TypeReference#CLASS_TYPE_PARAMETER_BOUND} or {@link TypeReference#CLASS_EXTENDS}. See
+	 *     {@link TypeReference}.
+	 * @param typePath the path to the annotated type argument, wildcard bound, array element type, or
+	 *     static inner type within 'typeRef'. May be {@literal null} if the annotation targets
+	 *     'typeRef' as a whole.
+	 * @param descriptor the class descriptor of the annotation class.
+	 * @param visible {@literal true} if the annotation is visible at runtime.
+	 * @return a visitor to visit the annotation values, or {@literal null} if this visitor is not
+	 *     interested in visiting this annotation.
+	 */
+	public AnnotationVisitor visitTypeAnnotation(
+			final int typeRef, final TypePath typePath, final String descriptor, final boolean visible) {
+		if (api < Opcodes.ASM5) {
+			throw new UnsupportedOperationException("This feature requires ASM5");
+		}
+		if (cv != null) {
+			return cv.visitTypeAnnotation(typeRef, typePath, descriptor, visible);
+		}
+		return null;
+	}
 
-  /**
-   * Visits a non standard attribute of the class.
-   *
-   * @param attribute an attribute.
-   */
-  public void visitAttribute(final Attribute attribute) {
-    if (cv != null) {
-      cv.visitAttribute(attribute);
-    }
-  }
+	/**
+	 * 访问类的非标准属性。
+	 *
+	 * Visits a non standard attribute of the class.
+	 *
+	 * @param attribute an attribute.
+	 */
+	public void visitAttribute(final Attribute attribute) {
+		if (cv != null) {
+			cv.visitAttribute(attribute);
+		}
+	}
 
-  /**
-   * Visits a member of the nest. A nest is a set of classes of the same package that share access
-   * to their private members. One of these classes, called the host, lists the other members of the
-   * nest, which in turn should link to the host of their nest. This method must be called only if
-   * the visited class is the host of a nest. A nest host is implicitly a member of its own nest, so
-   * it's invalid to call this method with the visited class name as argument.
-   *
-   * @param nestMember the internal name of a nest member.
-   */
-  public void visitNestMember(final String nestMember) {
-    if (api < Opcodes.ASM7) {
-      throw new UnsupportedOperationException("This feature requires ASM7");
-    }
-    if (cv != null) {
-      cv.visitNestMember(nestMember);
-    }
-  }
+	/**
+	 * 访问nest中的一个成员。nest是同一包的一组类，它们共享对私有成员的访问。其中一个类，称为host，列出了nest的其他成员，
+	 * 这些成员应该链接到它们nest的主机。只有在访问的类是嵌套的主机时，才必须调用此方法。一个nest主机是它自己的nest的隐式成员，
+	 * 所以用访问过的类名作为参数来调用这个方法是无效的。
+	 *
+	 * Visits a member of the nest. A nest is a set of classes of the same package that share access
+	 * to their private members. One of these classes, called the host, lists the other members of the
+	 * nest, which in turn should link to the host of their nest. This method must be called only if
+	 * the visited class is the host of a nest. A nest host is implicitly a member of its own nest, so
+	 * it's invalid to call this method with the visited class name as argument.
+	 *
+	 * @param nestMember the internal name of a nest member.
+	 */
+	public void visitNestMember(final String nestMember) {
+		if (api < Opcodes.ASM7) {
+			throw new UnsupportedOperationException("This feature requires ASM7");
+		}
+		if (cv != null) {
+			cv.visitNestMember(nestMember);
+		}
+	}
 
-  /**
-   * Visits information about an inner class. This inner class is not necessarily a member of the
-   * class being visited.
-   *
-   * @param name the internal name of an inner class (see {@link Type#getInternalName()}).
-   * @param outerName the internal name of the class to which the inner class belongs (see {@link
-   *     Type#getInternalName()}). May be {@literal null} for not member classes.
-   * @param innerName the (simple) name of the inner class inside its enclosing class. May be
-   *     {@literal null} for anonymous inner classes.
-   * @param access the access flags of the inner class as originally declared in the enclosing
-   *     class.
-   */
-  public void visitInnerClass(
-      final String name, final String outerName, final String innerName, final int access) {
-    if (cv != null) {
-      cv.visitInnerClass(name, outerName, innerName, access);
-    }
-  }
+	/**
+	 * 访问关于内部类的信息。这个内部类不一定是被访问的类的成员。
+	 *
+	 * Visits information about an inner class. This inner class is not necessarily a member of the
+	 * class being visited.
+	 *
+	 * @param name the internal name of an inner class (see {@link Type#getInternalName()}).
+	 * @param outerName the internal name of the class to which the inner class belongs (see {@link
+	 *     Type#getInternalName()}). May be {@literal null} for not member classes.
+	 * @param innerName the (simple) name of the inner class inside its enclosing class. May be
+	 *     {@literal null} for anonymous inner classes.
+	 * @param access the access flags of the inner class as originally declared in the enclosing
+	 *     class.
+	 */
+	public void visitInnerClass(
+			final String name, final String outerName, final String innerName, final int access) {
+		if (cv != null) {
+			cv.visitInnerClass(name, outerName, innerName, access);
+		}
+	}
 
-  /**
-   * Visits a field of the class.
-   *
-   * @param access the field's access flags (see {@link Opcodes}). This parameter also indicates if
-   *     the field is synthetic and/or deprecated.
-   * @param name the field's name.
-   * @param descriptor the field's descriptor (see {@link Type}).
-   * @param signature the field's signature. May be {@literal null} if the field's type does not use
-   *     generic types.
-   * @param value the field's initial value. This parameter, which may be {@literal null} if the
-   *     field does not have an initial value, must be an {@link Integer}, a {@link Float}, a {@link
-   *     Long}, a {@link Double} or a {@link String} (for {@code int}, {@code float}, {@code long}
-   *     or {@code String} fields respectively). <i>This parameter is only used for static
-   *     fields</i>. Its value is ignored for non static fields, which must be initialized through
-   *     bytecode instructions in constructors or methods.
-   * @return a visitor to visit field annotations and attributes, or {@literal null} if this class
-   *     visitor is not interested in visiting these annotations and attributes.
-   */
-  public FieldVisitor visitField(
-      final int access,
-      final String name,
-      final String descriptor,
-      final String signature,
-      final Object value) {
-    if (cv != null) {
-      return cv.visitField(access, name, descriptor, signature, value);
-    }
-    return null;
-  }
+	/**
+	 * 访问类的一个field
+	 *
+	 * Visits a field of the class.
+	 *
+	 * @param access the field's access flags (see {@link Opcodes}). This parameter also indicates if
+	 *     the field is synthetic and/or deprecated.
+	 * @param name the field's name.
+	 * @param descriptor the field's descriptor (see {@link Type}).
+	 * @param signature the field's signature. May be {@literal null} if the field's type does not use
+	 *     generic types.
+	 * @param value the field's initial value. This parameter, which may be {@literal null} if the
+	 *     field does not have an initial value, must be an {@link Integer}, a {@link Float}, a {@link
+	 *     Long}, a {@link Double} or a {@link String} (for {@code int}, {@code float}, {@code long}
+	 *     or {@code String} fields respectively). <i>This parameter is only used for static
+	 *     fields</i>. Its value is ignored for non static fields, which must be initialized through
+	 *     bytecode instructions in constructors or methods.
+	 * @return a visitor to visit field annotations and attributes, or {@literal null} if this class
+	 *     visitor is not interested in visiting these annotations and attributes.
+	 */
+	public FieldVisitor visitField(
+			final int access,
+			final String name,
+			final String descriptor,
+			final String signature,
+			final Object value) {
+		if (cv != null) {
+			return cv.visitField(access, name, descriptor, signature, value);
+		}
+		return null;
+	}
 
-  /**
-   * Visits a method of the class. This method <i>must</i> return a new {@link MethodVisitor}
-   * instance (or {@literal null}) each time it is called, i.e., it should not return a previously
-   * returned visitor.
-   *
-   * @param access the method's access flags (see {@link Opcodes}). This parameter also indicates if
-   *     the method is synthetic and/or deprecated.
-   * @param name the method's name.
-   * @param descriptor the method's descriptor (see {@link Type}).
-   * @param signature the method's signature. May be {@literal null} if the method parameters,
-   *     return type and exceptions do not use generic types.
-   * @param exceptions the internal names of the method's exception classes (see {@link
-   *     Type#getInternalName()}). May be {@literal null}.
-   * @return an object to visit the byte code of the method, or {@literal null} if this class
-   *     visitor is not interested in visiting the code of this method.
-   */
-  public MethodVisitor visitMethod(
-      final int access,
-      final String name,
-      final String descriptor,
-      final String signature,
-      final String[] exceptions) {
-    if (cv != null) {
-      return cv.visitMethod(access, name, descriptor, signature, exceptions);
-    }
-    return null;
-  }
+	/**
+	 * 访问类的方法。此方法每次调用时必须返回一个新的{@link MethodVisitor}实例(或{@literal null})，即，则不应返回先前返回的访问者。
+	 *
+	 * Visits a method of the class. This method <i>must</i> return a new {@link MethodVisitor}
+	 * instance (or {@literal null}) each time it is called, i.e., it should not return a previously
+	 * returned visitor.
+	 *
+	 * @param access the method's access flags (see {@link Opcodes}). This parameter also indicates if
+	 *     the method is synthetic and/or deprecated.
+	 * @param name the method's name.
+	 * @param descriptor the method's descriptor (see {@link Type}).
+	 * @param signature the method's signature. May be {@literal null} if the method parameters,
+	 *     return type and exceptions do not use generic types.
+	 * @param exceptions the internal names of the method's exception classes (see {@link
+	 *     Type#getInternalName()}). May be {@literal null}.
+	 * @return an object to visit the byte code of the method, or {@literal null} if this class
+	 *     visitor is not interested in visiting the code of this method.
+	 */
+	public MethodVisitor visitMethod(
+			final int access,
+			final String name,
+			final String descriptor,
+			final String signature,
+			final String[] exceptions) {
+		if (cv != null) {
+			return cv.visitMethod(access, name, descriptor, signature, exceptions);
+		}
+		return null;
+	}
 
-  /**
-   * Visits the end of the class. This method, which is the last one to be called, is used to inform
-   * the visitor that all the fields and methods of the class have been visited.
-   */
-  public void visitEnd() {
-    if (cv != null) {
-      cv.visitEnd();
-    }
-  }
+	/**
+	 * 访问类的end。此方法是最后调用的方法，用于通知访问者类的所有字段和方法都已被访问。
+	 *
+	 * Visits the end of the class. This method, which is the last one to be called, is used to inform
+	 * the visitor that all the fields and methods of the class have been visited.
+	 */
+	public void visitEnd() {
+		if (cv != null) {
+			cv.visitEnd();
+		}
+	}
 }
