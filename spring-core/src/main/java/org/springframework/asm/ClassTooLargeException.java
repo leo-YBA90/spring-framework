@@ -28,6 +28,8 @@
 package org.springframework.asm;
 
 /**
+ * 当{@link ClassWriter}生成的类的常量池太大时抛出异常。
+ *
  * Exception thrown when the constant pool of a class produced by a {@link ClassWriter} is too
  * large.
  *
@@ -52,6 +54,8 @@ public final class ClassTooLargeException extends IndexOutOfBoundsException {
   }
 
   /**
+   * 返回类的内部名称。
+   *
    * Returns the internal name of the class.
    *
    * @return the internal name of the class.
@@ -61,6 +65,8 @@ public final class ClassTooLargeException extends IndexOutOfBoundsException {
   }
 
   /**
+   * 返回类的常数池项的数目。
+   *
    * Returns the number of constant pool items of the class.
    *
    * @return the number of constant pool items of the class.
