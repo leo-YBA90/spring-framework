@@ -324,6 +324,8 @@ public abstract class GenericFilterBean implements Filter, BeanNameAware, Enviro
 
 
 	/**
+	 * 通过FilterConfig init参数创建的PropertyValues实现。
+	 *
 	 * PropertyValues implementation created from FilterConfig init parameters.
 	 */
 	@SuppressWarnings("serial")

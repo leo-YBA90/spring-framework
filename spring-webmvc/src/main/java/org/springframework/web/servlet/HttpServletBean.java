@@ -204,6 +204,8 @@ public abstract class HttpServletBean extends HttpServlet implements Environment
 
 
 	/**
+	 * 由ServletConfig init参数创建的PropertyValues实现。
+	 *
 	 * PropertyValues implementation created from ServletConfig init parameters.
 	 */
 	private static class ServletConfigPropertyValues extends MutablePropertyValues {

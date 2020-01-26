@@ -58,6 +58,11 @@ import org.springframework.cglib.core.VisibilityPredicate;
 import org.springframework.cglib.core.WeakCacheKey;
 
 /**
+ * 增强器
+ * 生成动态子类以启用方法拦截。这个类开始是作为JDK 1.3中包含的标准动态代理支持的替代，但是除了实现接口之外，
+ * 它还允许代理扩展具体的基类。动态生成的子类覆盖超类和的非最终方法
+ * 具有回调到用户定义的拦截器实现的钩子。
+ *
  * Generates dynamic subclasses to enable method interception. This
  * class started as a substitute for the standard Dynamic Proxy support
  * included with JDK 1.3, but one that allowed the proxies to extend a
@@ -66,26 +71,46 @@ import org.springframework.cglib.core.WeakCacheKey;
  * have hooks which callback to user-defined interceptor
  * implementations.
  * <p>
+ *
+ * 最原始和最一般的回调类型是{@link MethodInterceptor}，在AOP术语中，它支持“around advice”——也就是说，
+ * 您可以在前面调用定制代码
+ * 以及调用“super”方法之后。此外，您可以在调用超方法之前修改参数，或者根本不调用它。
+ *
  * The original and most general callback type is the {@link MethodInterceptor}, which
  * in AOP terms enables "around advice"--that is, you can invoke custom code both before
  * and after the invocation of the "super" method. In addition you can modify the
  * arguments before calling the super method, or not call it at all.
  * <p>
+ *
+ * 虽然MethodInterceptor是通用的，足以满足任何拦截的需要，它往往是多余的。为了简单性和性能，
+ * 还可以使用其他专门的回调类型，如{@link LazyLoader}。
+ * 通常每个增强的类都会使用一个回调，但是您可以通过{@link CallbackFilter}控制每个方法使用哪个回调。
+ *
  * Although <code>MethodInterceptor</code> is generic enough to meet any
  * interception need, it is often overkill. For simplicity and performance, additional
  * specialized callback types, such as {@link LazyLoader} are also available.
  * Often a single callback will be used per enhanced class, but you can control
  * which callback is used on a per-method basis with a {@link CallbackFilter}.
  * <p>
+ *
+ * 该类最常见的用法体现在静态帮助器方法中。对于高级需求，比如定制ClassLoader来使用，您应该创建一个新的Enhancer实例。
+ * CGLIB中的其他类也遵循类似的模式。
+ *
  * The most common uses of this class are embodied in the static helper methods. For
  * advanced needs, such as customizing the <code>ClassLoader</code> to use, you should create
  * a new instance of <code>Enhancer</code>. Other classes within CGLIB follow a similar pattern.
  * <p>
+ *
+ * 所有增强的对象都实现{@link Factory}接口，除非使用{@link #setUseFactory}显式禁用此功能。
+ * Factory接口提供了一个API来更改现有对象的回调，以及创建相同类型的新实例的更快、更简单的方法。
  * All enhanced objects implement the {@link Factory} interface, unless {@link #setUseFactory} is
  * used to explicitly disable this feature. The <code>Factory</code> interface provides an API
  * to change the callbacks of an existing object, as well as a faster and easier way to create
  * new instances of the same type.
  * <p>
+ *
+ * 对于java.lang.reflect.Proxy的几乎完全替代，请参见{@link Proxy}类。
+ *
  * For an almost drop-in replacement for
  * <code>java.lang.reflect.Proxy</code>, see the {@link Proxy} class.
  */
