@@ -28,6 +28,9 @@
 package org.springframework.asm;
 
 /**
+ * 生成相应类文件结构的{@link ClassVisitor}，如Java虚拟机规范(JVMS)中定义的那样。它可以单独使用，“从零开始”生成Java类，
+ * 或者与一个或多个{@link ClassReader}和适配器{@link ClassVisitor}一起从一个或多个现有Java类生成修改后的类。
+ *
  * A {@link ClassVisitor} that generates a corresponding ClassFile structure, as defined in the Java
  * Virtual Machine Specification (JVMS). It can be used alone, to generate a Java class "from
  * scratch", or with one or more {@link ClassReader} and adapter {@link ClassVisitor} to generate a
@@ -39,11 +42,17 @@ package org.springframework.asm;
 public class ClassWriter extends ClassVisitor {
 
   /**
+   * 自动计算方法的最大堆栈大小和最大局部变量数的标志。如果设置了这个标志，那么{@link #visitMethod}方法返回的
+   * {@link MethodVisitor}的{@link MethodVisitor#visitMaxs}方法的参数将被忽略，并从每个方法的签名和字节码自动计算。
+   *
    * A flag to automatically compute the maximum stack size and the maximum number of local
    * variables of methods. If this flag is set, then the arguments of the {@link
    * MethodVisitor#visitMaxs} method of the {@link MethodVisitor} returned by the {@link
    * #visitMethod} method will be ignored, and computed automatically from the signature and the
    * bytecode of each method.
+   *
+   * 注意:对于版本为{@link Opcodes#V1_7}的更多的类，此选项需要有效的堆栈映射帧。然后从这些帧和中间的字节码指令计算最大堆栈大小。
+   * 如果堆栈映射帧不存在或必须重新计算，则使用{@link #COMPUTE_FRAMES}代替。
    *
    * <p><b>Note:</b> for classes whose version is {@link Opcodes#V1_7} of more, this option requires
    * valid stack map frames. The maximum stack size is then computed from these frames, and from the
@@ -55,6 +64,10 @@ public class ClassWriter extends ClassVisitor {
   public static final int COMPUTE_MAXS = 1;
 
   /**
+   * 一个标志，自动计算堆栈映射帧的方法从零开始。如果设置了这个标志，那么对{@link MethodVisitor#visitFrame}方法的调用将被忽略，
+   * 堆栈映射帧将从方法字节码重新计算。{@link MethodVisitor#visitMaxs} 方法的参数也被忽略，并从字节码重新计算。换言之，
+   * {@link #COMPUTE_FRAMES}意味着{@link #COMPUTE_MAXS}。
+   *
    * A flag to automatically compute the stack map frames of methods from scratch. If this flag is
    * set, then the calls to the {@link MethodVisitor#visitFrame} method are ignored, and the stack
    * map frames are recomputed from the methods bytecode. The arguments of the {@link
@@ -69,117 +82,159 @@ public class ClassWriter extends ClassVisitor {
   // ordered as in Section 4.7 of the JVMS.
 
   /**
+   * jvm类文件结构的minor_version和major_version字段。minor_version存储在16个最重要的位中，而major_version存储在16个最不重要的位中。
+   *
    * The minor_version and major_version fields of the JVMS ClassFile structure. minor_version is
    * stored in the 16 most significant bits, and major_version in the 16 least significant bits.
    */
   private int version;
 
+  /** 这个类的符号表(包含constant_pool和BootstrapMethods)。 */
   /** The symbol table for this class (contains the constant_pool and the BootstrapMethods). */
   private final SymbolTable symbolTable;
 
   /**
+   * JVMS类文件结构的access_flags字段。这个字段可以包含ASM特定的访问标志，比如{@link Opcodes#ACC_DEPRECATED}，
+   * 这些标志在生成类文件结构时被删除。
+   *
    * The access_flags field of the JVMS ClassFile structure. This field can contain ASM specific
    * access flags, such as {@link Opcodes#ACC_DEPRECATED}, which are removed when generating the
    * ClassFile structure.
    */
   private int accessFlags;
 
+  /** jvm类文件结构的this_class字段。 */
   /** The this_class field of the JVMS ClassFile structure. */
   private int thisClass;
 
+  /** JVMS类文件结构的父类字段。 */
   /** The super_class field of the JVMS ClassFile structure. */
   private int superClass;
 
+  /** JVMS类文件结构的interface_count字段。 */
   /** The interface_count field of the JVMS ClassFile structure. */
   private int interfaceCount;
 
+  /** JVMS类文件结构的“接口”数组。 */
   /** The 'interfaces' array of the JVMS ClassFile structure. */
   private int[] interfaces;
 
   /**
+   * 这个类的字段，存储在一个通过{@link FieldWriter#fv}字段链接的{@link FieldWriter}链表中。该字段存储列表的第一个元素。
+   *
    * The fields of this class, stored in a linked list of {@link FieldWriter} linked via their
    * {@link FieldWriter#fv} field. This field stores the first element of this list.
    */
   private FieldWriter firstField;
 
   /**
+   * 这个类的字段，存储在一个通过{@link FieldWriter#fv}字段链接的{@link FieldWriter}链表中。此字段存储此列表的最后一个元素。
+   *
    * The fields of this class, stored in a linked list of {@link FieldWriter} linked via their
    * {@link FieldWriter#fv} field. This field stores the last element of this list.
    */
   private FieldWriter lastField;
 
   /**
+   * 这个类的方法，存储在一个通过{@link MethodWriter#mv}字段链接的{@link MethodWriter}的链表中。该字段存储列表的第一个元素。
+   *
    * The methods of this class, stored in a linked list of {@link MethodWriter} linked via their
    * {@link MethodWriter#mv} field. This field stores the first element of this list.
    */
   private MethodWriter firstMethod;
 
   /**
+   * 这个类的方法，存储在一个通过{@link MethodWriter#mv}字段链接的{@link MethodWriter}的链表中。此字段存储此列表的最后一个元素。
+   *
    * The methods of this class, stored in a linked list of {@link MethodWriter} linked via their
    * {@link MethodWriter#mv} field. This field stores the last element of this list.
    */
   private MethodWriter lastMethod;
 
+  /** InnerClasses属性的number_of_classes字段，或0。 */
   /** The number_of_classes field of the InnerClasses attribute, or 0. */
   private int numberOfInnerClasses;
 
+  /** InnerClasses属性的'classes'数组，或{@literal null}。 */
   /** The 'classes' array of the InnerClasses attribute, or {@literal null}. */
   private ByteVector innerClasses;
 
+  /** EnclosingMethod属性的class_index字段，或0。 */
   /** The class_index field of the EnclosingMethod attribute, or 0. */
   private int enclosingClassIndex;
 
+  /** EnclosingMethod属性的method_index字段。 */
   /** The method_index field of the EnclosingMethod attribute. */
   private int enclosingMethodIndex;
 
+  /** 签名属性的signature_index字段，或0。 */
   /** The signature_index field of the Signature attribute, or 0. */
   private int signatureIndex;
 
+  /** SourceFile 属性的source_file_index字段，或 0。 */
   /** The source_file_index field of the SourceFile attribute, or 0. */
   private int sourceFileIndex;
 
+  /** SourceDebugExtension属性的debug_extension字段，或者{@literal null}。 */
   /** The debug_extension field of the SourceDebugExtension attribute, or {@literal null}. */
   private ByteVector debugExtension;
 
   /**
+   * 该类的最后一个运行时可见注释。可以使用{@link AnnotationWriter#previousAnnotation}字段访问前面的注释。可以是{@literal null}。
+   *
    * The last runtime visible annotation of this class. The previous ones can be accessed with the
    * {@link AnnotationWriter#previousAnnotation} field. May be {@literal null}.
    */
   private AnnotationWriter lastRuntimeVisibleAnnotation;
 
   /**
+   * 该类的最后一个运行时不可见注释。可以使用{@link AnnotationWriter#previousAnnotation}字段访问前面的注释。可以是{@literal null}。
+   *
    * The last runtime invisible annotation of this class. The previous ones can be accessed with the
    * {@link AnnotationWriter#previousAnnotation} field. May be {@literal null}.
    */
   private AnnotationWriter lastRuntimeInvisibleAnnotation;
 
   /**
+   * 该类的最后一个运行时可见类型注释。可以使用{@link AnnotationWriter#previousAnnotation}字段访问前面的注释。可以是{@literal null}。
+   *
    * The last runtime visible type annotation of this class. The previous ones can be accessed with
    * the {@link AnnotationWriter#previousAnnotation} field. May be {@literal null}.
    */
   private AnnotationWriter lastRuntimeVisibleTypeAnnotation;
 
   /**
+   * 该类的最后一个运行时不可见类型注释。可以使用{@link AnnotationWriter#previousAnnotation}字段访问前面的注释。可以是{@literal null}。
+   *
    * The last runtime invisible type annotation of this class. The previous ones can be accessed
    * with the {@link AnnotationWriter#previousAnnotation} field. May be {@literal null}.
    */
   private AnnotationWriter lastRuntimeInvisibleTypeAnnotation;
 
+  /** 这个类的模块属性，或{@literal null}。 */
   /** The Module attribute of this class, or {@literal null}. */
   private ModuleWriter moduleWriter;
 
+  /** NestHost属性的host_class_index字段，或0。 */
   /** The host_class_index field of the NestHost attribute, or 0. */
   private int nestHostClassIndex;
 
+  /** NestMembers属性的number_of_classes字段，或0。 */
   /** The number_of_classes field of the NestMembers attribute, or 0. */
   private int numberOfNestMemberClasses;
 
+  /** NestMembers属性或{@literal null}的'classes'数组。 */
   /** The 'classes' array of the NestMembers attribute, or {@literal null}. */
   private ByteVector nestMemberClasses;
 
   /**
+   * 该类的第一个非标准属性。下一个可以通过{@link Attribute#nextAttribute}字段访问。可以是{@literal null}。
+   *
    * The first non standard attribute of this class. The next ones can be accessed with the {@link
    * Attribute#nextAttribute} field. May be {@literal null}.
+   *
+   * 警告:此列表存储了反向访问顺序中的属性。firstAttribute实际上是在{@link #visitAttribute}中访问的最后一个属性。
+   * {@link #toByteArray}方法按此列表定义的顺序写入属性，即按用户指定的相反顺序写入。
    *
    * <p><b>WARNING</b>: this list stores the attributes in the <i>reverse</i> order of their visit.
    * firstAttribute is actually the last attribute visited in {@link #visitAttribute}. The {@link

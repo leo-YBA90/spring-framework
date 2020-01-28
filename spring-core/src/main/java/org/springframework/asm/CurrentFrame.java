@@ -29,6 +29,8 @@
 package org.springframework.asm;
 
 /**
+ * 有关方法的“当前”指令处的输入堆栈映射帧的信息。这是作为只包含一条指令的“基本块”的框架子类实现的。
+ *
  * Information about the input stack map frame at the "current" instruction of a method. This is
  * implemented as a Frame subclass for a "basic block" containing only one instruction.
  *
@@ -41,6 +43,9 @@ final class CurrentFrame extends Frame {
   }
 
   /**
+   * 将此current frame设置为下一个“current”指令（即给定指令之后的指令）的输入堆栈映射帧。
+   * 假设调用此方法时此对象的值是执行给定指令之前的堆栈映射帧状态。
+   *
    * Sets this CurrentFrame to the input stack map frame of the next "current" instruction, i.e. the
    * instruction just after the given one. It is assumed that the value of this object when this
    * method is called is the stack map frame status just before the given instruction is executed.

@@ -29,6 +29,8 @@
 package org.springframework.asm;
 
 /**
+ * 对字段或方法的引用。
+ *
  * A reference to a field or a method.
  *
  * @author Remi Forax
@@ -37,6 +39,11 @@ package org.springframework.asm;
 public final class Handle {
 
   /**
+   * 此句柄指定的字段或方法的类型。应该是{@link Opcodes#H_GETFIELD}、{@link Opcodes#H_GETSTATIC}、
+   * {@link Opcodes#H_PUTFIELD}、{@link Opcodes#H_PUTSTATIC}、{@link Opcodes#H_INVOKEVIRTUAL}、
+   * {@link Opcodes#H_INVOKESTATIC}、{@link Opcodes#H_INVOKESPECIAL}、{@link Opcodes#H_NEWINVOKESPECIAL}
+   * 或{@link Opcodes#H_INVOKEINTERFACE}。
+   *
    * The kind of field or method designated by this Handle. Should be {@link Opcodes#H_GETFIELD},
    * {@link Opcodes#H_GETSTATIC}, {@link Opcodes#H_PUTFIELD}, {@link Opcodes#H_PUTSTATIC}, {@link
    * Opcodes#H_INVOKEVIRTUAL}, {@link Opcodes#H_INVOKESTATIC}, {@link Opcodes#H_INVOKESPECIAL},
@@ -44,19 +51,25 @@ public final class Handle {
    */
   private final int tag;
 
+  /** 拥有此句柄指定的字段或方法的类的内部名称。 */
   /** The internal name of the class that owns the field or method designated by this handle. */
   private final String owner;
 
+  /** 此句柄指定的字段或方法的名称。 */
   /** The name of the field or method designated by this handle. */
   private final String name;
 
+  /** 此句柄指定的字段或方法的描述符。 */
   /** The descriptor of the field or method designated by this handle. */
   private final String descriptor;
 
+  /** 所有者是否为接口。 */
   /** Whether the owner is an interface or not. */
   private final boolean isInterface;
 
   /**
+   * 构造新字段或方法句柄。
+   *
    * Constructs a new field or method handle.
    *
    * @param tag the kind of field or method designated by this Handle. Must be {@link
@@ -104,6 +117,8 @@ public final class Handle {
   }
 
   /**
+   * 返回此句柄指定的字段或方法的类型。
+   *
    * Returns the kind of field or method designated by this handle.
    *
    * @return {@link Opcodes#H_GETFIELD}, {@link Opcodes#H_GETSTATIC}, {@link Opcodes#H_PUTFIELD},
@@ -116,6 +131,8 @@ public final class Handle {
   }
 
   /**
+   * 返回拥有此句柄指定的字段或方法的类的内部名称。
+   *
    * Returns the internal name of the class that owns the field or method designated by this handle.
    *
    * @return the internal name of the class that owns the field or method designated by this handle.
@@ -125,6 +142,8 @@ public final class Handle {
   }
 
   /**
+   * 返回此句柄指定的字段或方法的名称。
+   *
    * Returns the name of the field or method designated by this handle.
    *
    * @return the name of the field or method designated by this handle.
@@ -134,6 +153,8 @@ public final class Handle {
   }
 
   /**
+   * 返回此句柄指定的字段或方法的描述符。
+   *
    * Returns the descriptor of the field or method designated by this handle.
    *
    * @return the descriptor of the field or method designated by this handle.
@@ -143,6 +164,8 @@ public final class Handle {
   }
 
   /**
+   * 如果此句柄指定的字段或方法的所有者是接口，则返回true。
+   *
    * Returns true if the owner of the field or method designated by this handle is an interface.
    *
    * @return true if the owner of the field or method designated by this handle is an interface.
@@ -175,6 +198,10 @@ public final class Handle {
   }
 
   /**
+   * 返回此句柄的文本表示形式。文本表示形式是：
+   * 对于类的引用：owner“.name descriptor”（“tag”）”，
+   * 对于接口的引用：owner“.name descriptor”（“tag”itf）。
+   *
    * Returns the textual representation of this handle. The textual representation is:
    *
    * <ul>

@@ -30,22 +30,29 @@ package org.springframework.asm;
 import java.util.Arrays;
 
 /**
+ * 在运行时用引导方法计算其值的常数。
+ *
  * A constant whose value is computed at runtime, with a bootstrap method.
  *
  * @author Remi Forax
  */
 public final class ConstantDynamic {
 
+  /** 常量名称（可以是任意的）。 */
   /** The constant name (can be arbitrary). */
   private final String name;
 
+  /** 常量类型（必须是字段描述符）。 */
   /** The constant type (must be a field descriptor). */
   private final String descriptor;
 
+  /** 用于在运行时计算常量值的引导方法。 */
   /** The bootstrap method to use to compute the constant value at runtime. */
   private final Handle bootstrapMethod;
 
   /**
+   * 传递给引导方法的参数，以便在运行时计算常量值。
+   *
    * The arguments to pass to the bootstrap method, in order to compute the constant value at
    * runtime.
    */
@@ -72,6 +79,8 @@ public final class ConstantDynamic {
   }
 
   /**
+   * 返回此常数的名称。
+   *
    * Returns the name of this constant.
    *
    * @return the name of this constant.
@@ -81,6 +90,8 @@ public final class ConstantDynamic {
   }
 
   /**
+   * 返回此常量的类型。
+   *
    * Returns the type of this constant.
    *
    * @return the type of this constant, as a field descriptor.
@@ -90,6 +101,8 @@ public final class ConstantDynamic {
   }
 
   /**
+   * 返回用于计算此常数值的引导方法。
+   *
    * Returns the bootstrap method used to compute the value of this constant.
    *
    * @return the bootstrap method used to compute the value of this constant.
@@ -99,6 +112,8 @@ public final class ConstantDynamic {
   }
 
   /**
+   * 返回传递给bootstrap方法的参数数，以便计算此常量的值。
+   *
    * Returns the number of arguments passed to the bootstrap method, in order to compute the value
    * of this constant.
    *
@@ -110,6 +125,8 @@ public final class ConstantDynamic {
   }
 
   /**
+   * 返回传递给bootstrap方法的参数，以便计算此常量的值。
+   *
    * Returns an argument passed to the bootstrap method, in order to compute the value of this
    * constant.
    *
@@ -122,6 +139,8 @@ public final class ConstantDynamic {
   }
 
   /**
+   * 返回要传递给bootstrap方法的参数，以便计算此常量的值。警告：此数组不能修改，也不能返回给用户。
+   *
    * Returns the arguments to pass to the bootstrap method, in order to compute the value of this
    * constant. WARNING: this array must not be modified, and must not be returned to the user.
    *
@@ -133,6 +152,8 @@ public final class ConstantDynamic {
   }
 
   /**
+   * 返回此常数的大小。
+   *
    * Returns the size of this constant.
    *
    * @return the size of this constant, i.e., 2 for {@code long} and {@code double}, 1 otherwise.
