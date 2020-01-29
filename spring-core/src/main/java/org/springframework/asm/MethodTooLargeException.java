@@ -28,6 +28,8 @@
 package org.springframework.asm;
 
 /**
+ * 当由{@link ClassWriter}生成的方法的代码属性太大时引发异常。
+ *
  * Exception thrown when the Code attribute of a method produced by a {@link ClassWriter} is too
  * large.
  *
@@ -62,6 +64,8 @@ public final class MethodTooLargeException extends IndexOutOfBoundsException {
   }
 
   /**
+   * 返回所有者类的内部名称。
+   *
    * Returns the internal name of the owner class.
    *
    * @return the internal name of the owner class.
@@ -71,6 +75,8 @@ public final class MethodTooLargeException extends IndexOutOfBoundsException {
   }
 
   /**
+   * 返回方法的名称。
+   *
    * Returns the name of the method.
    *
    * @return the name of the method.
@@ -80,6 +86,8 @@ public final class MethodTooLargeException extends IndexOutOfBoundsException {
   }
 
   /**
+   * 返回方法的描述符。
+   *
    * Returns the descriptor of the method.
    *
    * @return the descriptor of the method.
@@ -89,6 +97,8 @@ public final class MethodTooLargeException extends IndexOutOfBoundsException {
   }
 
   /**
+   * 返回方法的代码属性的大小（字节）。
+   *
    * Returns the size of the method's Code attribute, in bytes.
    *
    * @return the size of the method's Code attribute, in bytes.

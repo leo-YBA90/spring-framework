@@ -28,6 +28,8 @@
 package org.springframework.asm;
 
 /**
+ * 访问Java方法的访问者
+ *
  * A visitor to visit a Java method. The methods of this class must be called in the following
  * order: ( {@code visitParameter} )* [ {@code visitAnnotationDefault} ] ( {@code visitAnnotation} |
  * {@code visitAnnotableParameterCount} | {@code visitParameterAnnotation} {@code
@@ -51,12 +53,15 @@ public abstract class MethodVisitor {
   private static final String REQUIRES_ASM5 = "This feature requires ASM5";
 
   /**
+   * 此访问者实现的ASM API版本。此字段的值必须是{@link Opcodes#ASM4}、{@link Opcodes#ASM5}、{@link Opcodes#ASM6}或{@link Opcodes#ASM7}之一。
+   *
    * The ASM API version implemented by this visitor. The value of this field must be one of {@link
    * Opcodes#ASM4}, {@link Opcodes#ASM5}, {@link Opcodes#ASM6} or {@link Opcodes#ASM7}.
    */
   protected final int api;
 
   /**
+   * 此访问者必须将方法调用委托给的方法访问者。可能是{@literal null}.
    * The method visitor to which this visitor must delegate method calls. May be {@literal null}.
    */
   protected MethodVisitor mv;
@@ -92,6 +97,8 @@ public abstract class MethodVisitor {
   // -----------------------------------------------------------------------------------------------
 
   /**
+   * 访问此方法的参数。
+   *
    * Visits a parameter of this method.
    *
    * @param name parameter name or {@literal null} if none is provided.
@@ -108,6 +115,8 @@ public abstract class MethodVisitor {
   }
 
   /**
+   * 访问此批注接口方法的默认值。
+   *
    * Visits the default value of this annotation interface method.
    *
    * @return a visitor to the visit the actual default value of this annotation interface method, or
@@ -123,6 +132,7 @@ public abstract class MethodVisitor {
   }
 
   /**
+   * 访问此方法的注解
    * Visits an annotation of this method.
    *
    * @param descriptor the class descriptor of the annotation class.
@@ -138,6 +148,8 @@ public abstract class MethodVisitor {
   }
 
   /**
+   * 访问方法签名中注解的类型
+   *
    * Visits an annotation on a type in the method signature.
    *
    * @param typeRef a reference to the annotated type. The sort of this type reference must be
@@ -165,6 +177,8 @@ public abstract class MethodVisitor {
   }
 
   /**
+   * 访问可以有注释的方法参数的数目。默认情况下（即不调用此方法时），由方法描述符定义的所有方法参数都可以有注释。
+   *
    * Visits the number of method parameters that can have annotations. By default (i.e. when this
    * method is not called), all the method parameters defined by the method descriptor can have
    * annotations.
@@ -185,6 +199,8 @@ public abstract class MethodVisitor {
   }
 
   /**
+   * 访问此方法的参数注解。
+   *
    * Visits an annotation of a parameter this method.
    *
    * @param parameter the parameter index. This index must be strictly smaller than the number of
@@ -207,6 +223,8 @@ public abstract class MethodVisitor {
   }
 
   /**
+   * 访问此方法的非标准属性。
+   *
    * Visits a non standard attribute of this method.
    *
    * @param attribute an attribute.
@@ -217,6 +235,7 @@ public abstract class MethodVisitor {
     }
   }
 
+  /** 开始访问方法的代码（如果有）（即非抽象方法）。*/
   /** Starts the visit of the method's code, if any (i.e. non abstract method). */
   public void visitCode() {
     if (mv != null) {
@@ -225,6 +244,19 @@ public abstract class MethodVisitor {
   }
 
   /**
+   * 访问局部变量和操作数堆栈元素的当前状态。此方法必须（*）在以下任何指令之前调用：无条件分支指令（如GOTO或THROW）、
+   * 跳转指令的目标指令或启动异常处理程序块的指令i。访问的类型必须在执行之前描述局部变量和操作数堆栈元素的值。
+   * （*）这仅对版本大于或等于0的类是必需的。方法的帧必须以展开形式或压缩形式给出（所有帧必须使用相同的格式，
+   * 即不能在单个方法中混合使用展开和压缩的帧）：在展开形式中，所有帧必须具有F_NEW类型。在压缩格式中，
+   * 帧基本上是前一帧状态的“delta”：“1”表示具有与前一帧完全相同的局部变量和空堆栈的帧。
+   * {@link Opcodes#F_SAME1}表示具有与前一帧完全相同的局部变量且堆栈上只有一个值的帧
+   * （numStack为1，堆栈[0]包含堆栈项类型的值）。{@link Opcodes#F_APPEND}使用当前局部变量表示帧与前一帧中的局部变量相同，
+   * 只是定义了其他局部变量（numLocal为1、2或3，并且局部元素包含表示添加类型的值）。
+   * {@link Opcodes#F_CHOP}用当前局部变量表示帧与前一帧中的局部变量相同，
+   * 只不过最后1-3个局部变量不存在且堆栈为空（numLocal为1、2或3）。{@link Opcodes#F_FULL}表示完整的帧数据。
+   * 在这两种情况下，与方法的参数和访问标志相对应的第一个帧都是隐式的，不能被访问。此外，
+   * 访问同一代码位置的两个或多个帧是非法的（即，在两次调用visitFrame之间必须访问至少一条指令）。
+   *
    * Visits the current state of the local variables and operand stack elements. This method must(*)
    * be called <i>just before</i> any instruction <b>i</b> that follows an unconditional branch
    * instruction such as GOTO or THROW, that is the target of a jump instruction, or that starts an
@@ -297,6 +329,8 @@ public abstract class MethodVisitor {
   // -----------------------------------------------------------------------------------------------
 
   /**
+   * 访问零操作数指令。
+   *
    * Visits a zero operand instruction.
    *
    * @param opcode the opcode of the instruction to be visited. This opcode is either NOP,
@@ -317,6 +351,8 @@ public abstract class MethodVisitor {
   }
 
   /**
+   * 使用单个int操作数访问指令。
+   *
    * Visits an instruction with a single int operand.
    *
    * @param opcode the opcode of the instruction to be visited. This opcode is either BIPUSH, SIPUSH
@@ -337,6 +373,8 @@ public abstract class MethodVisitor {
   }
 
   /**
+   * 访问局部变量指令。局部变量指令是加载或存储局部变量值的指令。
+   *
    * Visits a local variable instruction. A local variable instruction is an instruction that loads
    * or stores the value of a local variable.
    *
@@ -352,6 +390,8 @@ public abstract class MethodVisitor {
   }
 
   /**
+   * 访问类型指令。类型指令是以类的内部名称作为参数的指令。
+   *
    * Visits a type instruction. A type instruction is an instruction that takes the internal name of
    * a class as parameter.
    *
@@ -367,6 +407,8 @@ public abstract class MethodVisitor {
   }
 
   /**
+   * 访问现场指导。字段指令是加载或存储对象字段值的指令。
+   *
    * Visits a field instruction. A field instruction is an instruction that loads or stores the
    * value of a field of an object.
    *
@@ -384,6 +426,8 @@ public abstract class MethodVisitor {
   }
 
   /**
+   * 访问方法说明。方法指令是调用方法的指令。
+   *
    * Visits a method instruction. A method instruction is an instruction that invokes a method.
    *
    * @param opcode the opcode of the type instruction to be visited. This opcode is either
@@ -402,6 +446,8 @@ public abstract class MethodVisitor {
   }
 
   /**
+   * 访问调用的动态指令。
+   *
    * Visits a method instruction. A method instruction is an instruction that invokes a method.
    *
    * @param opcode the opcode of the type instruction to be visited. This opcode is either
@@ -431,6 +477,8 @@ public abstract class MethodVisitor {
   }
 
   /**
+   * 访问跳转指令。跳转指令是可以跳转到另一条指令的指令。
+   *
    * Visits an invokedynamic instruction.
    *
    * @param name the method's name.
@@ -455,6 +503,8 @@ public abstract class MethodVisitor {
   }
 
   /**
+   * 访问标签。一个标签指定在它之后要访问的指令。
+   *
    * Visits a jump instruction. A jump instruction is an instruction that may jump to another
    * instruction.
    *
