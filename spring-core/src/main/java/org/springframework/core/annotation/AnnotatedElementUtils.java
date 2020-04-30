@@ -31,6 +31,31 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.MultiValueMap;
 
 /**
+ *
+ * 在{@link AnnotatedElement AnnotatedElements}上查找注解、元注解和可重复注解的通用实用程序方法。
+ *
+ * {@code AnnotatedElementUtils}为Spring的元注解编程模型定义了公共API，支持注解属性覆盖。如果不需要支持注解属性覆盖，可以考虑使用{@link AnnotationUtils}。
+ * 注意，这个类的特性不是由JDK的自省工具本身提供的。
+ * 注解属性覆盖
+ * 支持元注解与属性覆盖由注解提供了所有的变体{@code getMergedAnnotationAttributes()}, {@code getMergedAnnotation()},
+ * {@code getAllMergedAnnotations()}, {@code getMergedRepeatableAnnotations()}, {@code findMergedAnnotationAttributes()},
+ * {@code findMergedAnnotation()}, {@code findAllMergedAnnotations()},, {@code findMergedRepeatableAnnotations()}的方法。
+ * 查找与获取语义
+ * 该类中方法使用的搜索算法遵循find或get语义。查询每个单独方法的javadocs，以了解使用哪个搜索算法的详细信息。
+ * Get语义仅限于搜索在{@code AnnotatedElement}(即在本地声明或{@linkplain java.lang.annotation)上出现的注解。
+ * 或者在{@code AnnotatedElement}上面的注解层次结构中声明。
+ * Find语义更加详尽，提供了get语义和以下支持:
+ * 如果带注解的元素是类，则在接口上进行搜索
+ * 如果带注解的元素是类，则在超类上搜索
+ * 如果带注解的元素是方法，则解析桥接方法
+ * 如果带注解的元素是方法，则在接口中搜索方法
+ * 如果带注解的元素是方法，则在超类中搜索方法
+ * 支持{@code @inherit}
+ * 下面的get语义将遵守Java的{@link java.lang.annotation}的契约。除了本地声明的注解(包括自定义的复合注解)将比继承的注解更受欢迎之外，
+ * inherit @ inherit}注解将更受欢迎。相反，遵循find语义的方法将完全忽略{@code @ inherit}的存在，因为find搜索算法手动遍历类型和方法层次结构，
+ * 从而隐式支持注解继承，而不需要{@code @inherit}。
+ *
+ *
  * General utility methods for finding annotations, meta-annotations, and
  * repeatable annotations on {@link AnnotatedElement AnnotatedElements}.
  *

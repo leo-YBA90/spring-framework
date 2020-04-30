@@ -24,8 +24,20 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * {@code @AliasFor}是一个用于声明注释属性别名的注释。
+ *
  * {@code @AliasFor} is an annotation that is used to declare aliases for
  * annotation attributes.
+ * 使用场景：
+ * 1. 注解中的显式别名:在单个注解中，可以在一对属性上声明{@code @AliasFor}，以表明它们是彼此可互换的别名。
+ * 2. 元注解中属性的显式别名:如果{@code @AliasFor}的{@link #annotation}属性被设置为与声明它的属性不同的注解，
+ * 则{@link #attribute}被解释为元注解中属性的别名(即，显式元注解属性覆盖)。这样就可以精确地控制在注解层次结构中覆盖哪些属性。
+ * 实际上，使用{@code @AliasFor}甚至可以声明元注解的{@code value}属性的别名。
+ * 3. 隐式注释中的别名:如果一个或多个属性在一个声明注解的属性覆盖相同元注解属性(直接或间接)横跨,这些属性将被视为一组隐含的别名为彼此,
+ * 导致行为类似于在一个注解中明确的别名。
+ *
+ * 使用要求：
+ * 与Java中的任何注解一样，仅存在{@code @AliasFor}本身不会强制别名语义。为了加强别名语义，必须通过{@link MergedAnnotations}加载注解。
  *
  * <h3>Usage Scenarios</h3>
  * <ul>

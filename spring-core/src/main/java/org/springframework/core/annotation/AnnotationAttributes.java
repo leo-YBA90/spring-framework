@@ -27,6 +27,10 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 /**
+ * {@link LinkedHashMap}子类表示由{@link AnnotationUtils}、{@link AnnotatedElementUtils}和基于Spring的反射
+ * 和基于asm的{@link org.springframework.core.type}读取的注解属性键-值对。{@link org.springframework.core.type.AnnotationMetadata}的实现。
+ * 提供“伪具体化”来避免调用代码中的嘈杂映射泛型，以及以类型安全的方式查找注解属性的方便方法。
+ *
  * {@link LinkedHashMap} subclass representing annotation attribute
  * <em>key-value</em> pairs as read by {@link AnnotationUtils},
  * {@link AnnotatedElementUtils}, and Spring's reflection- and ASM-based
@@ -160,6 +164,8 @@ public class AnnotationAttributes extends LinkedHashMap<String, Object> {
 
 
 	/**
+	 * 获取由这个{@code AnnotationAttributes}表示的注解类型。
+	 * 
 	 * Get the type of annotation represented by this {@code AnnotationAttributes}.
 	 * @return the annotation type, or {@code null} if unknown
 	 * @since 4.2
@@ -170,6 +176,8 @@ public class AnnotationAttributes extends LinkedHashMap<String, Object> {
 	}
 
 	/**
+	 * 获取以字符串形式存储在指定的{@code attributeName}下的值。
+	 *
 	 * Get the value stored under the specified {@code attributeName} as a string.
 	 * @param attributeName the name of the attribute to get;
 	 * never {@code null} or empty
@@ -182,6 +190,9 @@ public class AnnotationAttributes extends LinkedHashMap<String, Object> {
 	}
 
 	/**
+	 * 获取作为字符串数组存储在指定的{@code attributeName}下的值。
+	 * 如果存储在指定的{@code attributeName}下的值是一个字符串，那么在返回它之前，它将被包装在一个单元素数组中。
+	 *
 	 * Get the value stored under the specified {@code attributeName} as an
 	 * array of strings.
 	 * <p>If the value stored under the specified {@code attributeName} is
@@ -198,6 +209,8 @@ public class AnnotationAttributes extends LinkedHashMap<String, Object> {
 	}
 
 	/**
+	 * 将存储在指定的{@code attributeName}下的布尔值。
+	 *
 	 * Get the value stored under the specified {@code attributeName} as a boolean.
 	 * @param attributeName the name of the attribute to get;
 	 * never {@code null} or empty
