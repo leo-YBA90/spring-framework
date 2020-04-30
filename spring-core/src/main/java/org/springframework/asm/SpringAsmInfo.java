@@ -32,6 +32,6 @@ public final class SpringAsmInfo {
 	 * The ASM compatibility version for Spring's ASM visitor implementations:
 	 * currently {@link Opcodes#ASM5}.
 	 */
-	public static final int ASM_VERSION = Opcodes.ASM5;
+	public static final int ASM_VERSION = 5 << 16 | 0 << 8;;
 
 }
