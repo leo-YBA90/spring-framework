@@ -24,6 +24,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.ConcurrentReferenceHashMap;
 
 /**
+ * 用于根据对象的类型声明确定其顺序的通用实用程序。处理Spring的{@link Order}注解和{@link javax.annotation.Priority}。
+ *
  * General utility for determining the order of an object based on its type declaration.
  * Handles Spring's {@link Order} annotation as well as {@link javax.annotation.Priority}.
  *
@@ -35,16 +37,20 @@ import org.springframework.util.ConcurrentReferenceHashMap;
  */
 public abstract class OrderUtils {
 
+	/** 非带注解类的缓存标记。 */
 	/** Cache marker for a non-annotated Class. */
 	private static final Object NOT_ANNOTATED = new Object();
 
 	private static final String JAVAX_PRIORITY_ANNOTATION = "javax.annotation.Priority";
 
 	/** Cache for @Order value (or NOT_ANNOTATED marker) per Class. */
+	/** 为每个类缓存@Order值(或NOT_ANNOTATED marker)。 */
 	private static final Map<AnnotatedElement, Object> orderCache = new ConcurrentReferenceHashMap<>(64);
 
 
 	/**
+	 * 返回指定的{@code type}上的订单，如果没有找到，则返回指定的默认值。处理{@link Order @Order}和{@code @javax.annotation.Priority}。
+	 *
 	 * Return the order on the specified {@code type}, or the specified
 	 * default value if none can be found.
 	 * <p>Takes care of {@link Order @Order} and {@code @javax.annotation.Priority}.
@@ -85,6 +91,8 @@ public abstract class OrderUtils {
 	}
 
 	/**
+	 * 从指定的注解集合返回订单。处理{@link Order @Order}和{@code @javax.annotation.Priority}.
+	 *
 	 * Return the order from the specified annotations collection.
 	 * <p>Takes care of {@link Order @Order} and
 	 * {@code @javax.annotation.Priority}.
@@ -120,6 +128,8 @@ public abstract class OrderUtils {
 	}
 
 	/**
+	 * 返回在指定类型上声明的{@code javax.annotation.Priority}注解的值，如果没有，则返回{@code null}。
+	 *
 	 * Return the value of the {@code javax.annotation.Priority} annotation
 	 * declared on the specified type, or {@code null} if none.
 	 * @param type the type to handle

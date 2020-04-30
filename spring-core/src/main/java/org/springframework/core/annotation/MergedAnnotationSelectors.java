@@ -20,6 +20,8 @@ import java.lang.annotation.Annotation;
 import java.util.function.Predicate;
 
 /**
+ * {@link MergedAnnotationSelector}实现，为{@link MergedAnnotation}实例提供各种选项。
+ *
  * {@link MergedAnnotationSelector} implementations that provide various options
  * for {@link MergedAnnotation} instances.
  *
@@ -40,6 +42,8 @@ public abstract class MergedAnnotationSelectors {
 
 
 	/**
+	 * 选择最近的注解，即距离最低的注解。
+	 * 
 	 * Select the nearest annotation, i.e. the one with the lowest distance.
 	 * @return a selector that picks the annotation with the lowest distance
 	 */
@@ -49,6 +53,8 @@ public abstract class MergedAnnotationSelectors {
 	}
 
 	/**
+	 * 尽可能选择第一个直接声明的注解。如果没有声明直接注解，则选择最近的注解。
+	 * 
 	 * Select the first directly declared annotation when possible. If no direct
 	 * annotations are declared then the nearest annotation is selected.
 	 * @return a selector that picks the first directly declared annotation whenever possible
@@ -60,6 +66,8 @@ public abstract class MergedAnnotationSelectors {
 
 
 	/**
+	 * {@link MergedAnnotationSelector}来选择最近的注解。
+	 * 
 	 * {@link MergedAnnotationSelector} to select the nearest annotation.
 	 */
 	private static class Nearest implements MergedAnnotationSelector<Annotation> {
@@ -83,6 +91,8 @@ public abstract class MergedAnnotationSelectors {
 
 
 	/**
+	 * {@link MergedAnnotationSelector}来选择第一个直接声明的注解。
+	 *
 	 * {@link MergedAnnotationSelector} to select the first directly declared
 	 * annotation.
 	 */

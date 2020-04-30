@@ -36,3 +36,21 @@ GreetingService greetService1 = message -> System.out.println("Hello " + message
 1. 注解可以作用在类(接口、枚举)、方法、字段声明（包括枚举常量）；
 2. 注解有一个int类型的参数，可以不传，默认是最低优先级；  
 3. 通过常量类的值我们可以推测参数值越小优先级越高；
+
+####注解合成
+java可以使用注解对原生注解或spring注解进行合成  
+例如：
+````
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@RestController
+@RequestMapping
+public @interface PathRestController {
+    @AliasFor("path")
+    String[] value() default {};
+    
+    @AliasFor("value")
+    String[] path() default {};
+}
+````

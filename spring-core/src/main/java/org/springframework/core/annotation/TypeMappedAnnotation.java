@@ -37,6 +37,8 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.ReflectionUtils;
 
 /**
+ * {@link MergedAnnotation}，它通过应用{@link AnnotationTypeMapping}的映射和镜像规则来调整来自根注释的属性。
+ *
  * {@link MergedAnnotation} that adapts attributes from a root annotation by
  * applying the mapping and mirroring rules of an {@link AnnotationTypeMapping}.
  *

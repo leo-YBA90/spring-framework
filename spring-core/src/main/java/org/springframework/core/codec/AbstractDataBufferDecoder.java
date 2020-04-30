@@ -29,6 +29,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.MimeType;
 
 /**
+ * {@code Decoder}实现的抽象基类，可以将{@code DataBuffer}直接解码为目标元素类型。
+ *
  * Abstract base class for {@code Decoder} implementations that can decode
  * a {@code DataBuffer} directly to the target element type.
  *
@@ -57,6 +59,11 @@ public abstract class AbstractDataBufferDecoder<T> extends AbstractDecoder<T> {
 
 
 	/**
+	 * 配置每当需要聚合输入流时可以缓冲的字节数的限制。这可能是由于解码为单个{@code DataBuffer}，
+	 * {@link java.nio.ByteBuffer ByteBuffer}，
+	 * {@code byte []}，{@link org.springframework.core.io.Resource Resource}，
+	 * {@code String}等。拆分输入流时也可能发生，例如分隔文本，在这种情况下，该限制适用于分隔符之间缓冲的数据。
+	 *
 	 * Configure a limit on the number of bytes that can be buffered whenever
 	 * the input stream needs to be aggregated. This can be a result of
 	 * decoding to a single {@code DataBuffer},

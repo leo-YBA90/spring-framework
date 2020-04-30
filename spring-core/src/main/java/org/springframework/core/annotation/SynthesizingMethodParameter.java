@@ -25,6 +25,8 @@ import java.lang.reflect.Parameter;
 import org.springframework.core.MethodParameter;
 
 /**
+ * 一个{@link MethodParameter}变量，它综合了通过{@link AliasFor @AliasFor}声明属性别名的注释。
+ *
  * A {@link MethodParameter} variant which synthesizes annotations that
  * declare attribute aliases via {@link AliasFor @AliasFor}.
  *
@@ -37,6 +39,8 @@ import org.springframework.core.MethodParameter;
 public class SynthesizingMethodParameter extends MethodParameter {
 
 	/**
+	 * 使用嵌套级别1为给定的方法创建一个新的{@code SynthesizingMethodParameter}。
+	 *
 	 * Create a new {@code SynthesizingMethodParameter} for the given method,
 	 * with nesting level 1.
 	 * @param method the Method to specify a parameter for
@@ -49,6 +53,7 @@ public class SynthesizingMethodParameter extends MethodParameter {
 	}
 
 	/**
+	 * 对给定的method创建一个{@code SynthesizingMethodParameter}
 	 * Create a new {@code SynthesizingMethodParameter} for the given method.
 	 * @param method the Method to specify a parameter for
 	 * @param parameterIndex the index of the parameter: -1 for the method

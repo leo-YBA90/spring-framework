@@ -25,6 +25,8 @@ import java.lang.annotation.Target;
 import org.springframework.core.Ordered;
 
 /**
+ * {@code @Order}定义一个注释组件的排序顺序。
+ *
  * {@code @Order} defines the sort order for an annotated component.
  *
  * <p>The {@link #value} is optional and represents an order value as defined in the

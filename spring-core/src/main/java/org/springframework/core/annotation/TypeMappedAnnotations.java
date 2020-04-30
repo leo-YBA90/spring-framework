@@ -32,6 +32,8 @@ import java.util.stream.StreamSupport;
 import org.springframework.lang.Nullable;
 
 /**
+ * {@link MergedAnnotations}实现，该实现使用{@link AnnotationTypeMappings}搜索和调整注解和元注解。
+ *
  * {@link MergedAnnotations} implementation that searches for and adapts
  * annotations and meta-annotations using {@link AnnotationTypeMappings}.
  *

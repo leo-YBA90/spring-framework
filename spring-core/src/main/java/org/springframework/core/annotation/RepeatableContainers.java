@@ -28,6 +28,11 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.ReflectionUtils;
 
 /**
+ * 用于确定充当其他注解容器的注解的策略。{@link #standardRepeatables()}方法提供了一个默认的策略，
+ * 它尊重Java的{@link Repeatable @Repeatable}支持，并且应该适用于大多数情况。
+ *
+ * {@link #of}方法可用于为不希望使用{@link Repeatable @Repeatable}的注解注册关系。要完全禁用可重复支持，请使用{@link #none()}。
+ *
  * Strategy used to determine annotations that act as containers for other
  * annotations. The {@link #standardRepeatables()} method provides a default
  * strategy that respects Java's {@link Repeatable @Repeatable} support and
@@ -53,6 +58,8 @@ public abstract class RepeatableContainers {
 
 
 	/**
+	 * 在包含的注解和可重复注解之间添加额外的显式关系。
+	 * 
 	 * Add an additional explicit relationship between a contained and
 	 * repeatable annotation.
 	 * @param container the container type
@@ -92,6 +99,8 @@ public abstract class RepeatableContainers {
 
 
 	/**
+	 * 创建一个{@link RepeatableContainers}实例，该实例使用Java的{@link Repeatable @Repeatable}注解进行搜索。
+	 *
 	 * Create a {@link RepeatableContainers} instance that searches using Java's
 	 * {@link Repeatable @Repeatable} annotation.
 	 * @return a {@link RepeatableContainers} instance
@@ -101,6 +110,8 @@ public abstract class RepeatableContainers {
 	}
 
 	/**
+	 * 创建使用已定义容器和可重复类型的{@link RepeatableContainers}实例。
+	 *
 	 * Create a {@link RepeatableContainers} instance that uses a defined
 	 * container and repeatable type.
 	 * @param repeatable the contained repeatable annotation
@@ -118,6 +129,8 @@ public abstract class RepeatableContainers {
 	}
 
 	/**
+	 * 创建一个不展开任何可重复注解的{@link RepeatableContainers}实例。
+	 * 
 	 * Create a {@link RepeatableContainers} instance that does not expand any
 	 * repeatable annotations.
 	 * @return a {@link RepeatableContainers} instance
@@ -128,6 +141,8 @@ public abstract class RepeatableContainers {
 
 
 	/**
+	 * 使用Java的{@link Repeatable @Repeatable}注解进行搜索的标准{@link RepeatableContainers}实现。
+	 * 
 	 * Standard {@link RepeatableContainers} implementation that searches using
 	 * Java's {@link Repeatable @Repeatable} annotation.
 	 */
@@ -179,6 +194,8 @@ public abstract class RepeatableContainers {
 
 
 	/**
+	 * 一个显式映射。
+	 *
 	 * A single explicit mapping.
 	 */
 	private static class ExplicitRepeatableContainer extends RepeatableContainers {

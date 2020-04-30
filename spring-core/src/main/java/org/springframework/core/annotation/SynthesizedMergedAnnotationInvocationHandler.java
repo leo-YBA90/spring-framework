@@ -31,6 +31,8 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.ReflectionUtils;
 
 /**
+ * {@link InvocationHandler}用于Spring已经合成的 {@link Annotation}(即包装在动态代理中)，该代理具有额外的功能，如属性别名处理。
+ *
  * {@link InvocationHandler} for an {@link Annotation} that Spring has
  * <em>synthesized</em> (i.e. wrapped in a dynamic proxy) with additional
  * functionality such as attribute alias handling.
@@ -112,6 +114,8 @@ final class SynthesizedMergedAnnotationInvocationHandler<A extends Annotation> i
 	}
 
 	/**
+	 * 有关所需算法的定义，请参见{@link Annotation#hashCode()}。
+	 *
 	 * See {@link Annotation#hashCode()} for a definition of the required algorithm.
 	 */
 	private int annotationHashCode() {
