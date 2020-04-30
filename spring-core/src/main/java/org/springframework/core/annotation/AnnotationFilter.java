@@ -19,6 +19,8 @@ package org.springframework.core.annotation;
 import java.lang.annotation.Annotation;
 
 /**
+ * 回调接口，可用于筛选特定的注解类型。
+ *
  * Callback interface that can be used to filter specific annotation types.
  *
  * @author Phillip Webb
@@ -28,6 +30,8 @@ import java.lang.annotation.Annotation;
 public interface AnnotationFilter {
 
 	/**
+	 * 匹配{@code java.lang}中的注解的{@link AnnotationFilter}。lang}和{@code org.springframework.lang}包及其子包。
+	 *
 	 * {@link AnnotationFilter} that matches annotations in the
 	 * {@code java.lang} and {@code org.springframework.lang} packages
 	 * and their subpackages.
@@ -35,12 +39,16 @@ public interface AnnotationFilter {
 	AnnotationFilter PLAIN = packages("java.lang", "org.springframework.lang");
 
 	/**
+	 * 匹配{@code java}和{@code javax}包及其子包中的注释的{@link AnnotationFilter}。
+	 *
 	 * {@link AnnotationFilter} that matches annotations in the
 	 * {@code java} and {@code javax} packages and their subpackages.
 	 */
 	AnnotationFilter JAVA = packages("java", "javax");
 
 	/**
+	 * {@link AnnotationFilter}匹配全部，并且可以在完全不需要相关注释类型时使用。
+	 *
 	 * {@link AnnotationFilter} that always matches and can be used when no
 	 * relevant annotation types are expected to be present at all.
 	 */
@@ -64,6 +72,8 @@ public interface AnnotationFilter {
 	};
 
 	/**
+	 * {@link AnnotationFilter}全部不匹配
+	 *
 	 * {@link AnnotationFilter} that never matches and can be used when no
 	 * filtering is needed (allowing for any annotation types to be present).
 	 */
@@ -88,6 +98,8 @@ public interface AnnotationFilter {
 
 
 	/**
+	 * 测试给定的注释是否与筛选器匹配。
+	 *
 	 * Test if the given annotation matches the filter.
 	 * @param annotation the annotation to test
 	 * @return {@code true} if the annotation matches
@@ -97,6 +109,8 @@ public interface AnnotationFilter {
 	}
 
 	/**
+	 * 测试给定的类型是否与筛选器匹配。
+	 *
 	 * Test if the given type matches the filter.
 	 * @param type the annotation type to test
 	 * @return {@code true} if the annotation matches
@@ -106,6 +120,8 @@ public interface AnnotationFilter {
 	}
 
 	/**
+	 * 测试给定的类型是否与筛选器匹配。
+	 *
 	 * Test if the given type name matches the filter.
 	 * @param typeName the fully qualified class name of the annotation type to test
 	 * @return {@code true} if the annotation matches
@@ -114,6 +130,8 @@ public interface AnnotationFilter {
 
 
 	/**
+	 * 创建一个新的{@link AnnotationFilter}来匹配指定包中的注解。
+	 *
 	 * Create a new {@link AnnotationFilter} that matches annotations in the
 	 * specified packages.
 	 * @param packages the annotation packages that should match

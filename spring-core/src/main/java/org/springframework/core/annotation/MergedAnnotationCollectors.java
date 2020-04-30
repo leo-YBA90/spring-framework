@@ -31,6 +31,8 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 /**
+ * 为{@link MergedAnnotation}实例提供各种简化操作的收集器实现。
+ *
  * Collector implementations that provide various reduction operations for
  * {@link MergedAnnotation} instances.
  *

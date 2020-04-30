@@ -27,6 +27,10 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.ConcurrentReferenceHashMap;
 
 /**
+ * 为单个源注解类型提供{@link AnnotationTypeMapping}信息。执行所有元注解的递归广度优先遍历，最终提供一种快速映射根{@link Annotation}属性的方法。
+ * 支持基于约定的元注解合并以及隐式和显式{@link AliasFor @AliasFor}别名。还提供有关镜像属性的信息。
+ * 这个类被设计成缓存，因此元注解只需要搜索一次，而不管实际使用了多少次。
+ *
  * Provides {@link AnnotationTypeMapping} information for a single source
  * annotation type. Performs a recursive breadth first crawl of all
  * meta-annotations to ultimately provide a quick way to map the attributes of

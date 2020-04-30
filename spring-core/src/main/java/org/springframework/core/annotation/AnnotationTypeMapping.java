@@ -37,6 +37,8 @@ import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 
 /**
+ * 提供根注解类型上下文中单个注解(或元注解)的映射信息。
+ * 
  * Provides mapping information for a single annotation (or meta-annotation) in
  * the context of a root annotation type.
  *
@@ -310,6 +312,8 @@ final class AnnotationTypeMapping {
 	}
 
 	/**
+	 * 方法在设置所有映射后调用。此时将不再对子映射进行进一步查找。
+	 *
 	 * Method called after all mappings have been set. At this point no further
 	 * lookups from child mappings will occur.
 	 */

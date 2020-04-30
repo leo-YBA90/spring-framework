@@ -33,6 +33,13 @@ import org.springframework.core.annotation.MergedAnnotations.SearchStrategy;
 import org.springframework.lang.Nullable;
 
 /**
+ * 从{@link MergedAnnotations}集合返回的单个合并注释。在注释上显示一个视图，其中的属性值可能已从不同的源值“合并”。
+ * 可以使用各种{@code get}方法访问属性值。例如，要访问{@code int}属性，可以使用{@link #getInt(String)}方法。
+ * 注意，访问时不转换属性值。例如，如果底层属性是{@code int}，则不可能调用{@link #getString(String)}。
+ * 这个规则的唯一例外是{@code Class}和{@code Class[]}值，它们可以分别被访问为{@code String}和{@code String[]}，以防止潜在的早期类初始化。
+ * 如果需要，{@code MergedAnnotation}可以将{@linkplain #synthesize()synthesized}
+ * 返回到实际的{@link java.lang.annotation.Annotation}。
+ *
  * A single merged annotation returned from a {@link MergedAnnotations}
  * collection. Presents a view onto an annotation where attribute values may
  * have been "merged" from different source values.

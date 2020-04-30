@@ -28,6 +28,8 @@ import org.springframework.util.ConcurrentReferenceHashMap;
 import org.springframework.util.ReflectionUtils;
 
 /**
+ * 提供了访问{@link Annotation}的属性方法的快速方法，排序一致，并提供了一些有用的实用程序方法。
+ *
  * Provides a quick way to access the attribute methods of an {@link Annotation}
  * with consistent ordering as well as a few useful utility methods.
  *
@@ -86,6 +88,8 @@ final class AttributeMethods {
 
 
 	/**
+	 * 确定此实例是否只包含一个名为{@code value}的属性。
+	 *
 	 * Determine if this instance only contains a single attribute named
 	 * {@code value}.
 	 * @return {@code true} if there is only a value attribute
@@ -97,6 +101,8 @@ final class AttributeMethods {
 
 
 	/**
+	 * 确定是否可以安全地访问给定注释中的值，而不会导致任何{@link TypeNotPresentException TypeNotPresentException}。
+	 *
 	 * Determine if values from the given annotation can be safely accessed without
 	 * causing any {@link TypeNotPresentException TypeNotPresentExceptions}.
 	 * @param annotation the annotation to check
@@ -119,6 +125,9 @@ final class AttributeMethods {
 	}
 
 	/**
+	 * 检查是否可以安全地访问给定注释的值,而不会导致任何{@link TypeNotPresentException TypeNotPresentExceptions}。
+	 * 特别是,该方法被设计用于覆盖谷歌应用程序引擎的延迟到异常的{@code Class}值(而不是更典型的早期{@code Class.getAnnotations() failure}失败。
+	 *
 	 * Check if values from the given annotation can be safely accessed without causing
 	 * any {@link TypeNotPresentException TypeNotPresentExceptions}. In particular,
 	 * this method is designed to cover Google App Engine's late arrival of such
@@ -151,6 +160,8 @@ final class AttributeMethods {
 	}
 
 	/**
+	 * 获取具有指定名称的属性，如果不存在匹配属性，则获取{@code null}。
+	 *
 	 * Get the attribute with the specified name or {@code null} if no
 	 * matching attribute exists.
 	 * @param name the attribute name to find
@@ -163,6 +174,8 @@ final class AttributeMethods {
 	}
 
 	/**
+	 * 获取指定索引处的属性。
+	 *
 	 * Get the attribute at the specified index.
 	 * @param index the index of the attribute to return
 	 * @return the attribute method

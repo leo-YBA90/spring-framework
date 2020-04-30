@@ -28,6 +28,8 @@ import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 
 /**
+ * 为{@link MergedAnnotation mergedan表示法}提供各种测试操作的谓词实现。
+ *
  * Predicate implementations that provide various test operations for
  * {@link MergedAnnotation MergedAnnotations}.
  *
@@ -41,6 +43,9 @@ public abstract class MergedAnnotationPredicates {
 
 
 	/**
+	 * 如果指定数组中包含{@linkplain MergedAnnotation#getType() merge annotation type}的名称，则创建一个新的{@link Predicate}，
+	 * 其计算结果为{@code true}。
+	 *
 	 * Create a new {@link Predicate} that evaluates to {@code true} if the name of the
 	 * {@linkplain MergedAnnotation#getType() merged annotation type} is contained in
 	 * the specified array.
@@ -53,6 +58,9 @@ public abstract class MergedAnnotationPredicates {
 	}
 
 	/**
+	 * 如果指定数组中包含{@linkplain MergedAnnotation#getType() merge annotation type}的名称，则创建一个新的{@link Predicate}，
+	 * 其计算结果为{@code true}。
+	 *
 	 * Create a new {@link Predicate} that evaluates to {@code true} if the
 	 * {@linkplain MergedAnnotation#getType() merged annotation type} is contained in
 	 * the specified array.
@@ -65,6 +73,8 @@ public abstract class MergedAnnotationPredicates {
 	}
 
 	/**
+	 * 如果指定集合中包含{@linkplain MergedAnnotation#getType() merge annotation type}，则创建一个新的{@link Predicate}，其计算结果为{@code true}。
+	 *
 	 * Create a new {@link Predicate} that evaluates to {@code true} if the
 	 * {@linkplain MergedAnnotation#getType() merged annotation type} is contained in
 	 * the specified collection.
@@ -79,6 +89,11 @@ public abstract class MergedAnnotationPredicates {
 	}
 
 	/**
+	 * 创建一个新的有状态的、单一使用的{@link Predicate}，它只匹配提取值的第一次运行。
+	 * 例如，{@code MergedAnnotationPredicates.firstRunOf(MergedAnnotation::distance)}将匹配第一个注释，以及具有相同距离的任何后续运行。
+	 * 注意:这个predicate只匹配第一次运行。一旦提取的值发生变化，则返回{@code false}。
+	 * 例如，如果您有一组带有distance {@code[1,1,2,1]}的注释，那么只有前两个是匹配的。
+	 *
 	 * Create a new stateful, single use {@link Predicate} that matches only
 	 * the first run of an extracted value. For example,
 	 * {@code MergedAnnotationPredicates.firstRunOf(MergedAnnotation::distance)}
@@ -99,6 +114,9 @@ public abstract class MergedAnnotationPredicates {
 	}
 
 	/**
+	 * 创建一个新的有状态的、单一使用的{@link Predicate}，它匹配基于提取的键的惟一注释。
+	 * 例如{@code MergedAnnotationPredicates.unique(MergedAnnotation::getType)}将匹配第一次遇到的唯一类型。
+	 *
 	 * Create a new stateful, single use {@link Predicate} that matches
 	 * annotations that are unique based on the extracted key. For example
 	 * {@code MergedAnnotationPredicates.unique(MergedAnnotation::getType)} will

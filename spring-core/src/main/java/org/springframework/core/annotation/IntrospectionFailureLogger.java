@@ -22,6 +22,9 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.lang.Nullable;
 
 /**
+ * 用于处理注释内省失败的日志facade(特别是{@code TypeNotPresentExceptions})。
+ * 允许继续进行注释处理，假设当类属性值不可解时，注释应该有效地消失。
+ *
  * Log facade used to handle annotation introspection failures (in particular
  * {@code TypeNotPresentExceptions}). Allows annotation processing to continue,
  * assuming that when Class attribute values are not resolvable the annotation

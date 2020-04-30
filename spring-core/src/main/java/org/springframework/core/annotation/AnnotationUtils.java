@@ -40,6 +40,25 @@ import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 
 /**
+ * 用于处理注解、处理元注解、桥接方法(编译器为通用声明生成)以及超方法(用于可选的注解继承)的通用实用程序方法。
+ * 注意，这个类的大部分特性并不是由JDK的自省工具本身提供的。
+ * 作为一般规则为runtime-retained应用注解(例如事务控制、授权或服务公开),
+ * 总是使用查找这个类上的方法(例如:{@link #findAnnotation(Method, Class)}或{@link #getAnnotation(Method, Class)})而不是普通的注解在JDK中查找方法。
+ * 您仍然可以显式地选择仅在给定类级别上进行get查找({@link #getAnnotation(Method, class)})和在给定方法的
+ * 整个继承层次结构中进行查找({@link #findAnnotation(Method, Class)}).
+ * 术语
+ * 直接表示、间接表示和表示的术语的含义与类级别javadoc中为{@link AnnotatedElement}(在Java 8中)定义的含义相同。
+ * 如果将注解声明为元素上存在的其他注解的元注解，则该注解是元素上的元注解。如果{@code A}直接存在于另一个注解上，
+ * 则{@code A}是另一个注解上的元存在，如果{@code A}直接存在于另一个注解上，则{@code A}是另一个注解上的元存在。
+ * 元注解支持
+ * 这个类中的大多数{@code find*()}方法和一些{@code get*()}方法提供了对查找用作元注解的注解的支持。有关详细信息，
+ * 请参阅该类中每个方法的javadoc。对于带有复合注解中属性覆盖的元注解的细粒度支持，可以考虑使用{@link AnnotatedElementUtils}的更具体的方法。
+ * 属性别名
+ * 该类中所有返回注解、注解数组或{@link AnnotationAttributes}的公共方法都透明地支持通过{@link AliasFor @AliasFor}配置的属性别名。
+ * 有关详细信息，请参考各种{@code synthesizeAnnotation*(..)}方法。
+ * 搜索范围
+ * 一旦找到指定类型的第一个注解，该类中方法使用的搜索算法将停止对注解的搜索。因此，指定类型的附加注解将被忽略。
+ *
  * General utility methods for working with annotations, handling meta-annotations,
  * bridge methods (which the compiler generates for generic declarations) as well
  * as super methods (for optional <em>annotation inheritance</em>).

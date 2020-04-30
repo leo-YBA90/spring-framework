@@ -21,6 +21,8 @@ import java.lang.annotation.Annotation;
 import org.springframework.lang.Nullable;
 
 /**
+ * 用于处理注解的回调接口。
+ * 
  * Callback interface used to process annotations.
  *
  * @param <C> the context type
@@ -34,6 +36,8 @@ import org.springframework.lang.Nullable;
 interface AnnotationsProcessor<C, R> {
 
 	/**
+	 * 在处理聚合时调用。这个方法可能会返回一个{@code non-null}结果来短路任何进一步的处理。
+	 *
 	 * Called when an aggregate is about to be processed. This method may return
 	 * a {@code non-null} result to short-circuit any further processing.
 	 * @param context context information relevant to the processor
@@ -46,6 +50,8 @@ interface AnnotationsProcessor<C, R> {
 	}
 
 	/**
+	 * 在处理聚合时调用。这个方法可能会返回一个{@code non-null}结果来短路任何进一步的处理。
+	 *
 	 * Called when an array of annotations can be processed. This method may
 	 * return a {@code non-null} result to short-circuit any further processing.
 	 * @param context context information relevant to the processor
@@ -59,6 +65,8 @@ interface AnnotationsProcessor<C, R> {
 	R doWithAnnotations(C context, int aggregateIndex, @Nullable Object source, Annotation[] annotations);
 
 	/**
+	 * 获取要返回的最终结果。默认情况下，此方法返回最后一个进程结果。
+	 *
 	 * Get the final result to be returned. By default this method returns
 	 * the last process result.
 	 * @param result the last early exit result, or {@code null} if none

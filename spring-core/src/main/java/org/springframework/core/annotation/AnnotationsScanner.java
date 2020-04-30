@@ -35,6 +35,8 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.ReflectionUtils;
 
 /**
+ * 扫描器，以在{@link AnnotatedElement}的注解层次结构中搜索相关的注解。
+ *
  * Scanner to search for relevant annotations in the annotation hierarchy of an
  * {@link AnnotatedElement}.
  *
@@ -62,6 +64,8 @@ abstract class AnnotationsScanner {
 
 
 	/**
+	 * 扫描指定元素的层次结构以找到相关的注解，并根据需要调用处理器。
+	 *
 	 * Scan the hierarchy of the specified element for relevant annotations and
 	 * call the processor as required.
 	 * @param context an optional context object that will be passed back to the
@@ -79,6 +83,8 @@ abstract class AnnotationsScanner {
 	}
 
 	/**
+	 * 扫描指定元素的层次结构以找到相关的注解，并根据需要调用处理器。
+	 * 
 	 * Scan the hierarchy of the specified element for relevant annotations and
 	 * call the processor as required.
 	 * @param context an optional context object that will be passed back to the

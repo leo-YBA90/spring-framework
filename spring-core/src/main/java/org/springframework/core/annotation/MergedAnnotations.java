@@ -27,6 +27,8 @@ import java.util.stream.Stream;
 import org.springframework.lang.Nullable;
 
 /**
+ * 提供对合并注释集合的访问，通常从{@link Class}或{@link Method}等源获得。
+ *
  * Provides access to a collection of merged annotations, usually obtained
  * from a source such as a {@link Class} or {@link Method}.
  *
