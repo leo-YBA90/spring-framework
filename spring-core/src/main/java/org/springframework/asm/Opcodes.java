@@ -50,7 +50,7 @@ public interface Opcodes {
 
   /*
    * Internal flags used to redirect calls to deprecated methods. For instance, if a visitOldStuff
-   * method in API_OLD is deprecated and replaced with visitNewStuff in API_NEW, then the
+   * method in API_OLD is deprecated and replaced with visitNewStuff in API_org.springframework.oxm.jaxb.test.FlightType;NEW, then the
    * redirection should be done as follows:
    *
    * <pre>

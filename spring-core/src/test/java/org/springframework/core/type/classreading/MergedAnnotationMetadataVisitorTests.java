@@ -44,15 +44,25 @@ class MergedAnnotationMetadataVisitorTests {
 	@Test
 	void visitWhenHasSimpleTypesCreatesAnnotation() {
 		loadFrom(WithSimpleTypesAnnotation.class);
+		// 获取注解的值,通过getValue获取到的是一个Optional的包装的只
 		assertThat(this.annotation.getType()).isEqualTo(SimpleTypesAnnotation.class);
+		System.out.println(this.annotation.getValue("stringValue"));
 		assertThat(this.annotation.getValue("stringValue")).contains("string");
+		System.out.println(this.annotation.getValue("byteValue"));
 		assertThat(this.annotation.getValue("byteValue")).contains((byte) 1);
+		System.out.println(this.annotation.getValue("shortValue"));
 		assertThat(this.annotation.getValue("shortValue")).contains((short) 2);
+		System.out.println(this.annotation.getValue("intValue"));
 		assertThat(this.annotation.getValue("intValue")).contains(3);
+		System.out.println(this.annotation.getValue("longValue"));
 		assertThat(this.annotation.getValue("longValue")).contains(4L);
+		System.out.println(this.annotation.getValue("booleanValue"));
 		assertThat(this.annotation.getValue("booleanValue")).contains(true);
+		System.out.println(this.annotation.getValue("charValue"));
 		assertThat(this.annotation.getValue("charValue")).contains('c');
+		System.out.println(this.annotation.getValue("doubleValue"));
 		assertThat(this.annotation.getValue("doubleValue")).contains(5.0);
+		System.out.println(this.annotation.getValue("floatValue"));
 		assertThat(this.annotation.getValue("floatValue")).contains(6.0f);
 	}
 

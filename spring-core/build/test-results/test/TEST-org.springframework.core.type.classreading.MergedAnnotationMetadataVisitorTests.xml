@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.springframework.core.type.classreading.MergedAnnotationMetadataVisitorTests" tests="6" skipped="0" failures="0" errors="0" timestamp="2020-05-01T08:21:12" hostname="Windows-PC" time="49.536">
+  <properties/>
+  <testcase name="visitWhenHasSimpleArrayTypesCreatesAnnotation()" classname="org.springframework.core.type.classreading.MergedAnnotationMetadataVisitorTests" time="44.53"/>
+  <testcase name="visitWhenHasSimpleTypesCreatesAnnotation()" classname="org.springframework.core.type.classreading.MergedAnnotationMetadataVisitorTests" time="2.581"/>
+  <testcase name="visitWhenHasAnnotationAttributesCreatesAnnotation()" classname="org.springframework.core.type.classreading.MergedAnnotationMetadataVisitorTests" time="2.412"/>
+  <testcase name="visitWhenHasEmptySimpleArrayTypesCreatesAnnotation()" classname="org.springframework.core.type.classreading.MergedAnnotationMetadataVisitorTests" time="0.002"/>
+  <testcase name="visitWhenHasClassAttributesCreatesAnnotation()" classname="org.springframework.core.type.classreading.MergedAnnotationMetadataVisitorTests" time="0.005"/>
+  <testcase name="visitWhenHasEnumAttributesCreatesAnnotation()" classname="org.springframework.core.type.classreading.MergedAnnotationMetadataVisitorTests" time="0.003"/>
+  <system-out><![CDATA[Optional[string]
+Optional[1]
+Optional[2]
+Optional[3]
+Optional[4]
+Optional[true]
+Optional[c]
+Optional[5.0]
+Optional[6.0]
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
