@@ -40,12 +40,7 @@ public class DefaultSingletonBeanRegistryTests {
 		beanRegistry.registerSingleton("tb", tb);
 		assertSame(tb, beanRegistry.getSingleton("tb"));
 
-		TestBean tb2 = (TestBean) beanRegistry.getSingleton("tb2", new ObjectFactory<Object>() {
-			@Override
-			public Object getObject() throws BeansException {
-				return new TestBean();
-			}
-		});
+		TestBean tb2 = (TestBean) beanRegistry.getSingleton("tb2", () -> new TestBean());
 		assertSame(tb2, beanRegistry.getSingleton("tb2"));
 
 		assertSame(tb, beanRegistry.getSingleton("tb"));

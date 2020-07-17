@@ -22,6 +22,10 @@ import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.core.io.Resource;
 
 /**
+ * 对{@link DefaultListableBeanFactory}进行扩展，主要用于从XML文件中读取{@link org.springframework.beans.factory.config.BeanDefinition},
+ * 对于注册及获取bean都是从父类DefaultListableBeanFactory继承的方法去实现，而唯独与父类不同的个性化实现是增加了{@link XmlBeanDefinitionReader}类型的reader属性。
+ * 在XmlBeanFactory中主要使用reader属性对资源文件进行读取和注册
+ *
  * Convenience extension of {@link DefaultListableBeanFactory} that reads bean definitions
  * from an XML document. Delegates to {@link XmlBeanDefinitionReader} underneath; effectively
  * equivalent to using an XmlBeanDefinitionReader with a DefaultListableBeanFactory.

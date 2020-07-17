@@ -2179,8 +2179,7 @@ public class DefaultListableBeanFactoryTests {
 		try {
 			lbf.getBean("test");
 			fail("Should have thrown BeanCreationException");
-		}
-		catch (BeanCreationException ex) {
+		} catch (BeanCreationException ex) {
 			assertEquals("test", ex.getBeanName());
 			assertTrue(ex.getMessage().toLowerCase().contains("abstract"));
 		}

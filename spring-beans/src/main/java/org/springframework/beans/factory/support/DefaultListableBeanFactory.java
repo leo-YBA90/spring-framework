@@ -80,7 +80,8 @@ import org.springframework.util.StringUtils;
 
 /**
  * bean加载的核心部分，是spring注册及加载bean的默认实现。和{@link XmlBeanFactory}不同的是，{@link XmlBeanFactory}使用了自定义的XML读取器
- * {@link XmlBeanDefinitionReader},实现个性化的{@link BeanDefinitionReader}
+ * {@link XmlBeanDefinitionReader},实现个性化的{@link BeanDefinitionReader}.
+ * 主要是对bean注册后的处理
  *
  * Spring's default implementation of the {@link ConfigurableListableBeanFactory}
  * and {@link BeanDefinitionRegistry} interfaces: a full-fledged bean factory

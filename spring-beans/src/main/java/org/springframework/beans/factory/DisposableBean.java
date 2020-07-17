@@ -17,6 +17,10 @@
 package org.springframework.beans.factory;
 
 /**
+ * 接口，由希望在销毁时释放资源的bean实现。
+ * {@link BeanFactory} 将在对一个有作用域的bean进行单独的销毁时调用destroy方法。在应用程序生命周期的驱动下，
+ * {@link org.springframework.context.ApplicationContext}应该在关闭时释放它的所有单例。
+ *
  * Interface to be implemented by beans that want to release resources on destruction.
  * A {@link BeanFactory} will invoke the destroy method on individual destruction of a
  * scoped bean. An {@link org.springframework.context.ApplicationContext} is supposed
