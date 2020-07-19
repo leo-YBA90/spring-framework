@@ -51,6 +51,11 @@ import org.springframework.util.xml.SimpleSaxErrorHandler;
 import org.springframework.util.xml.XmlValidationModeDetector;
 
 /**
+ * 1. 通过继承自{@link AbstractBeanDefinitionReader}中的方法，来使用{@link ResourceLoader}将资源文件路径转换成对应的{@link Resource}文件
+ * 2. 通过{@link DocumentLoader}对{@link Resource}文件进行转换，将{@link Resource}文件转换为{@link Document}文件
+ * 3. 通过实现接口{@link BeanDefinitionDocumentReader}的{@link DefaultBeanDefinitionDocumentReader}类对{@link Document}进行解析，
+ * 并使用{@link BeanDefinitionParserDelegate}对Element进行解析
+ *
  * Bean definition reader for XML bean definitions.
  * Delegates the actual XML document reading to an implementation
  * of the {@link BeanDefinitionDocumentReader} interface.
