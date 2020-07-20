@@ -407,6 +407,11 @@ public class BeanDefinitionParserDelegate {
 	}
 
 	/**
+	 * 1. 提取元素中的id和name属性
+	 * 2. 进一步解析其他所有属性并统一封装至AbstractBeanDefinition中
+	 * 3. 如果检测到没有beanName，那么使用默认规则为此bean生成beanName
+	 * 4. 将获取到的信息封装到{@link BeanDefinitionHolder}中
+	 *
 	 * Parses the supplied {@code <bean>} element. May return {@code null}
 	 * if there were errors during parse. Errors are reported to the
 	 * {@link org.springframework.beans.factory.parsing.ProblemReporter}.
@@ -467,7 +472,6 @@ public class BeanDefinitionParserDelegate {
 			String[] aliasesArray = StringUtils.toStringArray(aliases);
 			return new BeanDefinitionHolder(beanDefinition, beanName, aliasesArray);
 		}
-
 		return null;
 	}
 
