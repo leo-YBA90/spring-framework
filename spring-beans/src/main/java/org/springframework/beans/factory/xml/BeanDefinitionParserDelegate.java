@@ -557,6 +557,7 @@ public class BeanDefinitionParserDelegate {
 	}
 
 	/**
+	 * 解析bean标签，并把结果存储到AbstractBeanDefinition中
 	 * Apply the attributes of the given bean element to the given bean * definition.
 	 * @param ele bean declaration element
 	 * @param beanName bean name
@@ -602,8 +603,7 @@ public class BeanDefinitionParserDelegate {
 				String[] patterns = StringUtils.commaDelimitedListToStringArray(candidatePattern);
 				bd.setAutowireCandidate(PatternMatchUtils.simpleMatch(patterns, beanName));
 			}
-		}
-		else {
+		} else {
 			bd.setAutowireCandidate(TRUE_VALUE.equals(autowireCandidate));
 		}
 
@@ -614,8 +614,7 @@ public class BeanDefinitionParserDelegate {
 		if (ele.hasAttribute(INIT_METHOD_ATTRIBUTE)) {
 			String initMethodName = ele.getAttribute(INIT_METHOD_ATTRIBUTE);
 			bd.setInitMethodName(initMethodName);
-		}
-		else if (this.defaults.getInitMethod() != null) {
+		} else if (this.defaults.getInitMethod() != null) {
 			bd.setInitMethodName(this.defaults.getInitMethod());
 			bd.setEnforceInitMethod(false);
 		}
@@ -623,8 +622,7 @@ public class BeanDefinitionParserDelegate {
 		if (ele.hasAttribute(DESTROY_METHOD_ATTRIBUTE)) {
 			String destroyMethodName = ele.getAttribute(DESTROY_METHOD_ATTRIBUTE);
 			bd.setDestroyMethodName(destroyMethodName);
-		}
-		else if (this.defaults.getDestroyMethod() != null) {
+		} else if (this.defaults.getDestroyMethod() != null) {
 			bd.setDestroyMethodName(this.defaults.getDestroyMethod());
 			bd.setEnforceDestroyMethod(false);
 		}
