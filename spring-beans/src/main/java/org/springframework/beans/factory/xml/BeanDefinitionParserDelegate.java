@@ -761,13 +761,17 @@ public class BeanDefinitionParserDelegate {
 		NodeList nl = beanEle.getChildNodes();
 		for (int i = 0; i < nl.getLength(); i++) {
 			Node node = nl.item(i);
+			// 仅当在spring默认bean且为<replace-method>有效的时候才使用
 			if (isCandidateElement(node) && nodeNameEquals(node, REPLACED_METHOD_ELEMENT)) {
 				Element replacedMethodEle = (Element) node;
+				// 提取要替换的方法
 				String name = replacedMethodEle.getAttribute(NAME_ATTRIBUTE);
+				// 对应的方法
 				String callback = replacedMethodEle.getAttribute(REPLACER_ATTRIBUTE);
 				ReplaceOverride replaceOverride = new ReplaceOverride(name, callback);
 				// Look for arg-type match elements.
 				List<Element> argTypeEles = DomUtils.getChildElementsByTagName(replacedMethodEle, ARG_TYPE_ELEMENT);
+				// 提取参数
 				for (Element argTypeEle : argTypeEles) {
 					String match = argTypeEle.getAttribute(ARG_TYPE_MATCH_ATTRIBUTE);
 					match = (StringUtils.hasText(match) ? match : DomUtils.getTextValue(argTypeEle));
@@ -793,8 +797,7 @@ public class BeanDefinitionParserDelegate {
 				int index = Integer.parseInt(indexAttr);
 				if (index < 0) {
 					error("'index' cannot be lower than 0", ele);
-				}
-				else {
+				} else {
 					try {
 						this.parseState.push(new ConstructorArgumentEntry(index));
 						Object value = parsePropertyValue(ele, bd, null);
