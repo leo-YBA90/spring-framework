@@ -49,6 +49,15 @@ public class SimpleAliasRegistry implements AliasRegistry {
 	private final Map<String, String> aliasMap = new ConcurrentHashMap<>(16);
 
 
+	/**
+	 * 步骤：
+	 * 1. alias与beanName相同情况处理。如果beanName与alias相同的话不记录alias，并删除对应的alias
+	 * 2. alias覆盖处理。如果alias不允许覆盖，则抛出异常
+	 * 3. alias循环处理
+	 * 4. 注册alias
+	 * @param name the canonical name
+	 * @param alias the alias to be registered
+	 */
 	@Override
 	public void registerAlias(String name, String alias) {
 		Assert.hasText(name, "'name' must not be empty");
