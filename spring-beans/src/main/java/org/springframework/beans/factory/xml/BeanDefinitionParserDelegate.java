@@ -1412,6 +1412,8 @@ public class BeanDefinitionParserDelegate {
 	}
 
 	/**
+	 * 如果可以的话，通过名称空间处理程序装饰给定的bean定义。
+	 *
 	 * Decorate the given bean definition through a namespace handler, if applicable.
 	 * @param ele the current element
 	 * @param originalDef the current bean definition
@@ -1422,6 +1424,7 @@ public class BeanDefinitionParserDelegate {
 	}
 
 	/**
+	 * 如果可以的话，通过名称空间处理程序装饰给定的bean定义。
 	 * Decorate the given bean definition through a namespace handler, if applicable.
 	 * @param ele the current element
 	 * @param originalDef the current bean definition
@@ -1435,6 +1438,7 @@ public class BeanDefinitionParserDelegate {
 
 		// Decorate based on custom attributes first.
 		NamedNodeMap attributes = ele.getAttributes();
+		// 遍历所有属性，看看是否有适用于修饰的属性
 		for (int i = 0; i < attributes.getLength(); i++) {
 			Node node = attributes.item(i);
 			finalDefinition = decorateIfRequired(node, finalDefinition, containingBd);
@@ -1442,6 +1446,7 @@ public class BeanDefinitionParserDelegate {
 
 		// Decorate based on custom nested elements.
 		NodeList children = ele.getChildNodes();
+		// 遍历所有子节点，看看是否有适用于修饰的子元素
 		for (int i = 0; i < children.getLength(); i++) {
 			Node node = children.item(i);
 			if (node.getNodeType() == Node.ELEMENT_NODE) {
@@ -1461,21 +1466,22 @@ public class BeanDefinitionParserDelegate {
 	 */
 	public BeanDefinitionHolder decorateIfRequired(
 			Node node, BeanDefinitionHolder originalDef, @Nullable BeanDefinition containingBd) {
-
+		// 获取自定义的命名空间
 		String namespaceUri = getNamespaceURI(node);
+		// 对非默认的标签进行修饰
 		if (namespaceUri != null && !isDefaultNamespace(namespaceUri)) {
+			// 根据命名空间找到对应处理器
 			NamespaceHandler handler = this.readerContext.getNamespaceHandlerResolver().resolve(namespaceUri);
 			if (handler != null) {
+				// 进行修饰
 				BeanDefinitionHolder decorated =
 						handler.decorate(node, originalDef, new ParserContext(this.readerContext, this, containingBd));
 				if (decorated != null) {
 					return decorated;
 				}
-			}
-			else if (namespaceUri.startsWith("http://www.springframework.org/")) {
+			} else if (namespaceUri.startsWith("http://www.springframework.org/")) {
 				error("Unable to locate Spring NamespaceHandler for XML schema namespace [" + namespaceUri + "]", node);
-			}
-			else {
+			} else {
 				// A custom namespace, not to be handled by Spring - maybe "xml:...".
 				if (logger.isDebugEnabled()) {
 					logger.debug("No Spring NamespaceHandler found for XML schema namespace [" + namespaceUri + "]");
