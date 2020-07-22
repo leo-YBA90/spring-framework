@@ -140,24 +140,34 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	@Nullable
 	private volatile Object beanClass;
 
+	/** bean的作用范围 */
 	@Nullable
 	private String scope = SCOPE_DEFAULT;
 
+	/** bean的abstract属性 */
 	private boolean abstractFlag = false;
 
 	private boolean lazyInit = false;
-
+	/** 是否自动注入，默认no */
 	private int autowireMode = AUTOWIRE_NO;
 
 	private int dependencyCheck = DEPENDENCY_CHECK_NONE;
 
 	@Nullable
 	private String[] dependsOn;
-
+	/**
+	 * 设置为false，这样容器在查找自动装配对象时，将不会考虑该bean。即不会考虑作为其他bean的自动装配候选者，但是在该bean本身还可以使用其他bean装配
+	 */
 	private boolean autowireCandidate = true;
 
+	/**
+	 * 自动装配时，有多个bean候选，将作为首选者装配，对应的值为true
+	 */
 	private boolean primary = false;
 
+	/**
+	 * 记录qualifier标签返回的实例
+	 */
 	private final Map<String, AutowireCandidateQualifier> qualifiers = new LinkedHashMap<>();
 
 	@Nullable
@@ -179,6 +189,9 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	@Nullable
 	private MutablePropertyValues propertyValues;
 
+	/**
+	 * 记录lookup-method和replace-method
+	 */
 	private MethodOverrides methodOverrides = new MethodOverrides();
 
 	@Nullable
@@ -191,13 +204,18 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 
 	private boolean enforceDestroyMethod = true;
 
+	/** 是否是用户定义的而不是用户定义的，创建AOP的时候为true，程序设置 */
 	private boolean synthetic = false;
 
+	/**
+	 * 定义这个bean的应用。APPLICATION:用户，INFRASTRUCTURE:完全内部使用，与用户无关，SUPPORT:某些复杂配置的一部分，程序设置。
+	 */
 	private int role = BeanDefinition.ROLE_APPLICATION;
 
 	@Nullable
 	private String description;
 
+	/** 这个bean定义的资源 */
 	@Nullable
 	private Resource resource;
 
