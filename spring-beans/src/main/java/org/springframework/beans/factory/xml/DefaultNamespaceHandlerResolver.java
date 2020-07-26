@@ -154,10 +154,12 @@ public class DefaultNamespaceHandlerResolver implements NamespaceHandlerResolver
 	}
 
 	/**
+	 * 读取Spring.handlers配置文件，并将配置文件缓存到map中
 	 * Load the specified NamespaceHandler mappings lazily.
 	 */
 	private Map<String, Object> getHandlerMappings() {
 		Map<String, Object> handlerMappings = this.handlerMappings;
+		// 如果没有被缓存则开始进行缓存
 		if (handlerMappings == null) {
 			synchronized (this) {
 				handlerMappings = this.handlerMappings;
@@ -166,11 +168,13 @@ public class DefaultNamespaceHandlerResolver implements NamespaceHandlerResolver
 						logger.debug("Loading NamespaceHandler mappings from [" + this.handlerMappingsLocation + "]");
 					}
 					try {
+						// this.handlerMappingsLocation 在构造函数中已经被初始化成：META-INF/Spring.handlers
 						Properties mappings =
 								PropertiesLoaderUtils.loadAllProperties(this.handlerMappingsLocation, this.classLoader);
 						if (logger.isDebugEnabled()) {
 							logger.debug("Loaded NamespaceHandler mappings: " + mappings);
 						}
+						// 将Properties格式文件合并到Map格式的handlerMappings中
 						handlerMappings = new ConcurrentHashMap<>(mappings.size());
 						CollectionUtils.mergePropertiesIntoMap(mappings, handlerMappings);
 						this.handlerMappings = handlerMappings;
