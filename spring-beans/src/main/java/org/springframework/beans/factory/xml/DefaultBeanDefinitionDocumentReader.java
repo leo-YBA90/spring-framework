@@ -172,9 +172,10 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 				if (node instanceof Element) {
 					Element ele = (Element) node;
 					if (delegate.isDefaultNamespace(ele)) {
+						// 解析标签
 						parseDefaultElement(ele, delegate);
-					}
-					else {
+					} else {
+						// 解析自定义标签
 						delegate.parseCustomElement(ele);
 					}
 				}
@@ -319,6 +320,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 			// Send registration event.
 			/**
 			 * 发出响应事件，通知相关监听器，这个bean已经加载完成。
+			 * spring没有实现响应逻辑，用户自己扩展
 			 */
 			getReaderContext().fireComponentRegistered(new BeanComponentDefinition(bdHolder));
 		}
