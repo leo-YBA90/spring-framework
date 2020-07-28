@@ -518,6 +518,17 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 	/**
 	 * 实际的创建bean的函数
+	 * 1. 如果是单例则需要首先清除缓存
+	 * 2. 实例化bean，将BeanDefinition转换为BeanWrapper.转换是一个复杂的过程，
+	 * 		1. 如果存在工厂方法，则使用工厂方法进行初始化
+	 * 		2. 一个类有多个构造函数，每个构造函数都有不同的参数，所有需要根据参数锁定构造函数并进行初始化。
+	 * 		3. 如果即不存在工厂方法也不存在带有参数的构造函数，则使用默认的构造函数进行bean的实例化
+	 * 3. MergedBeanDefinitionPostProcessor的应用。bean合并后的处理，Autowired主机正式通过此方法实现注入类型的预解析
+	 * 4. 依赖处理。在此处解决循环依赖的问题
+	 * 5. 属性填充。将所有属性填充至bean的实例中
+	 * 6. 循环依赖检查。在此处检查已经加载的bean是否已经出现了依赖循环，并判断是否需要抛出异常。
+	 * 7. 注册DisposableBean，如果配置了destroy-method,这里需要注册以便于在销毁的时候调用。
+	 * 8. 完成创建并返回。
 	 * Actually create the specified bean. Pre-creation processing has already happened
 	 * at this point, e.g. checking {@code postProcessBeforeInstantiation} callbacks.
 	 * <p>Differentiates between default bean instantiation, use of a
