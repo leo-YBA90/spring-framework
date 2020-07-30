@@ -210,6 +210,15 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	}
 
 	/**
+	 * 使用回调方法，使得程序可以在创建单例前后做一些准备及处理操作。而真正获取单例的操作不是在这个方法中实现的，其实现逻辑是在ObjectFactory
+	 * 类型的实例singletonFactory中实现的。这些准备操作包括：
+	 * 1. 检查缓存是否已经加载过
+	 * 2. 若没有加载，则记录beanName的正在加载状态
+	 * 3. 加载单例前记录加载状态
+	 * 4. 通过调用参数传入的ObjectFactory的个体Object方法实例化bean
+	 * 5. 加载单例后的处理方法调用
+	 * 6. 将结果记录至缓存并删除加载bean过程中所记录的各种辅助状态
+	 * 7. 返回处理结果
 	 * Return the (raw) singleton object registered under the given name,
 	 * creating and registering a new one if none registered yet.
 	 * @param beanName the name of the bean
@@ -219,8 +228,11 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	 */
 	public Object getSingleton(String beanName, ObjectFactory<?> singletonFactory) {
 		Assert.notNull(beanName, "Bean name must not be null");
+		// 同步全局变量
 		synchronized (this.singletonObjects) {
+			// 首先检查对应的bean是否加载过，因为是复用以前的bean
 			Object singletonObject = this.singletonObjects.get(beanName);
+			// 如果为空才进行bean的初始化
 			if (singletonObject == null) {
 				if (this.singletonsCurrentlyInDestruction) {
 					throw new BeanCreationNotAllowedException(beanName,
@@ -237,18 +249,17 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 					this.suppressedExceptions = new LinkedHashSet<>();
 				}
 				try {
+					// 初始化bean
 					singletonObject = singletonFactory.getObject();
 					newSingleton = true;
-				}
-				catch (IllegalStateException ex) {
+				} catch (IllegalStateException ex) {
 					// Has the singleton object implicitly appeared in the meantime ->
 					// if yes, proceed with it since the exception indicates that state.
 					singletonObject = this.singletonObjects.get(beanName);
 					if (singletonObject == null) {
 						throw ex;
 					}
-				}
-				catch (BeanCreationException ex) {
+				} catch (BeanCreationException ex) {
 					if (recordSuppressedExceptions) {
 						for (Exception suppressedException : this.suppressedExceptions) {
 							ex.addRelatedCause(suppressedException);
@@ -263,6 +274,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 					afterSingletonCreation(beanName);
 				}
 				if (newSingleton) {
+					// 加入缓存
 					addSingleton(beanName, singletonObject);
 				}
 			}
