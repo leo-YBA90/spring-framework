@@ -513,48 +513,76 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		return this.applicationListeners;
 	}
 
+	/**
+	 * ApplicationContext初始化过程:
+	 * 1. 初始化前的准备工作，例如对系统属性后者环境变量进行准备及验证
+	 * 2. 初始化BeanFactory，并进行XML文件读取。在这一步骤中会复用BeanFactory中的配置文件，读取解析及其他功能，这一步之后，ApplicationContext实际上已经包含了BeanFactory所提供的功能，也就是可以进行bean的提取等基础操作
+	 * 3. 对BeanFactory进行各种功能填充。@Qualifier与@Autowired正是在这一步中增加的支持
+	 * 4. 子类覆盖方法做额外处理。例如函数postProcessBeanFactory来方便程序员在业务上做进一步扩展。
+	 * 5. 激活各种BeanFactory处理器
+	 * 6. 注册拦截bean创建的bean处理器，这里只是注册，真正的调用是在getBean的时候
+	 * 7. 为上下文初始化Message源，即不同语言的消息体，国际化处理
+	 * 8. 初始化应用消息广播器，并放入"applicationEventMulticaster"bean中
+	 * 9. 留给子类初始化其他的bean
+	 * 10. 在所有注册的bean中查找Listener bean,注册到消息广播器中
+	 * 11. 初始化剩下的单实例(非惰性的)
+	 * 12. 完成刷新过程，通知生命周期处理器lifecycleProcessor刷新过程，同时发出ContextRefreshEvent通知别人
+	 *
+	 * @throws BeansException
+	 * @throws IllegalStateException
+	 */
 	@Override
 	public void refresh() throws BeansException, IllegalStateException {
 		synchronized (this.startupShutdownMonitor) {
 			// Prepare this context for refreshing.
+			// 准备刷新上下文环境
 			prepareRefresh();
 
 			// Tell the subclass to refresh the internal bean factory.
+			// 初始化BeanFactory，并进行XML文件读取
 			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
 
 			// Prepare the bean factory for use in this context.
+			// 对BeanFactory进行各种功能扩充
 			prepareBeanFactory(beanFactory);
 
 			try {
 				// Allows post-processing of the bean factory in context subclasses.
+				// 子类覆盖方法做额外处理
 				postProcessBeanFactory(beanFactory);
 
 				// Invoke factory processors registered as beans in the context.
+				// 激活各种BeanFactory处理器
 				invokeBeanFactoryPostProcessors(beanFactory);
 
 				// Register bean processors that intercept bean creation.
+				// 注册拦截bean创建的bean处理器，这里只是注册，真正的调用是在getBean的时候
 				registerBeanPostProcessors(beanFactory);
 
 				// Initialize message source for this context.
+				// 为上下文初始化Message源，即不同语言的消息体，国际化处理
 				initMessageSource();
 
 				// Initialize event multicaster for this context.
+				// 初始化应用消息广播器，并放入"applicationEventMulticaster"bean中
 				initApplicationEventMulticaster();
 
 				// Initialize other special beans in specific context subclasses.
+				// 留给子类初始化其他的bean
 				onRefresh();
 
 				// Check for listener beans and register them.
+				// 在所有注册的bean中查找Listener bean,注册到消息广播器中
 				registerListeners();
 
 				// Instantiate all remaining (non-lazy-init) singletons.
+				// 初始化剩下的单实例(非惰性的)
 				finishBeanFactoryInitialization(beanFactory);
 
 				// Last step: publish corresponding event.
+				// 完成刷新过程，通知生命周期处理器lifecycleProcessor刷新过程，同时发出ContextRefreshEvent通知别人
 				finishRefresh();
-			}
-
-			catch (BeansException ex) {
+			}catch (BeansException ex) {
 				if (logger.isWarnEnabled()) {
 					logger.warn("Exception encountered during context initialization - " +
 							"cancelling refresh attempt: " + ex);
@@ -568,9 +596,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 				// Propagate exception to caller.
 				throw ex;
-			}
-
-			finally {
+			}finally {
 				// Reset common introspection caches in Spring's core, since we
 				// might not ever need metadata for singleton beans anymore...
 				resetCommonCaches();
