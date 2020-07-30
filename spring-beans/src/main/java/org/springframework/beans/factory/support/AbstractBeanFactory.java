@@ -1635,6 +1635,10 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	}
 
 	/**
+	 * 1. 对FactoryBean正确性的验证
+	 * 2. 对非FactoryBean不做任何处理
+	 * 3. 对bean进行转换
+	 * 4. 将从Factory中解析bean的工作委托给getObjectFromFactoryBean
 	 * Get the object for the given bean instance, either the bean
 	 * instance itself or its created object in case of a FactoryBean.
 	 * @param beanInstance the shared bean instance
@@ -1651,6 +1655,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			if (beanInstance instanceof NullBean) {
 				return beanInstance;
 			}
+			// 如果指定的name是工厂相关(以&为前缀)且beanInstance又不是FactoryBean类型则验证不通过
 			if (!(beanInstance instanceof FactoryBean)) {
 				throw new BeanIsNotAFactoryException(beanName, beanInstance.getClass());
 			}
@@ -1659,21 +1664,28 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		// Now we have the bean instance, which may be a normal bean or a FactoryBean.
 		// If it's a FactoryBean, we use it to create a bean instance, unless the
 		// caller actually wants a reference to the factory.
+		// 现在我们有了bean实例，它可能是一个正常的bean或一个FactoryBean。如果它是FactoryBean，我们使用它来创建一个bean实例，除非调用者确实需要对工厂的引用。
+		// 但是如果是用户的确想要直接获取工厂实例，而不是工厂的getObject方法对应的实例，那么传入的name应该加"&"
 		if (!(beanInstance instanceof FactoryBean) || BeanFactoryUtils.isFactoryDereference(name)) {
 			return beanInstance;
 		}
-
+		// 加载BeanFactory
 		Object object = null;
 		if (mbd == null) {
+			// 尝试从缓存中获取
 			object = getCachedObjectForFactoryBean(beanName);
 		}
 		if (object == null) {
 			// Return bean instance from factory.
+			// 此处beanInstance为FactoryBean类型
 			FactoryBean<?> factory = (FactoryBean<?>) beanInstance;
 			// Caches object obtained from FactoryBean if it is a singleton.
+			// 是否定义beanName
 			if (mbd == null && containsBeanDefinition(beanName)) {
+				// 将存储XML配置文件的GenericBeanDefinition转换为RootBeanDefinition，如果指定BeanName是子bean的话，会合并父类的相关属性
 				mbd = getMergedLocalBeanDefinition(beanName);
 			}
+			// 是否是用户定义的还是系统定义的
 			boolean synthetic = (mbd != null && mbd.isSynthetic());
 			object = getObjectFromFactoryBean(factory, beanName, !synthetic);
 		}
