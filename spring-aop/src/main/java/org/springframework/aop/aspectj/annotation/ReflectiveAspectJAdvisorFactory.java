@@ -110,6 +110,12 @@ public class ReflectiveAspectJAdvisorFactory extends AbstractAspectJAdvisorFacto
 	}
 
 
+	/**
+	 *
+	 * @param aspectInstanceFactory the aspect instance factory
+	 * (not the aspect instance itself in order to avoid eager instantiation)
+	 * @return
+	 */
 	@Override
 	public List<Advisor> getAdvisors(MetadataAwareAspectInstanceFactory aspectInstanceFactory) {
 		Class<?> aspectClass = aspectInstanceFactory.getAspectMetadata().getAspectClass();
@@ -182,19 +188,27 @@ public class ReflectiveAspectJAdvisorFactory extends AbstractAspectJAdvisorFacto
 	}
 
 
+	/**
+	 * 生成增强
+	 * @param candidateAdviceMethod the candidate advice method
+	 * @param aspectInstanceFactory the aspect instance factory
+	 * @param declarationOrderInAspect
+	 * @param aspectName the name of the aspect
+	 * @return
+	 */
 	@Override
 	@Nullable
 	public Advisor getAdvisor(Method candidateAdviceMethod, MetadataAwareAspectInstanceFactory aspectInstanceFactory,
 			int declarationOrderInAspect, String aspectName) {
 
 		validate(aspectInstanceFactory.getAspectMetadata().getAspectClass());
-
+		// 切点信息的获取
 		AspectJExpressionPointcut expressionPointcut = getPointcut(
 				candidateAdviceMethod, aspectInstanceFactory.getAspectMetadata().getAspectClass());
 		if (expressionPointcut == null) {
 			return null;
 		}
-
+		// 根据切点信息生产增强器
 		return new InstantiationModelAwarePointcutAdvisorImpl(expressionPointcut, candidateAdviceMethod,
 				this, aspectInstanceFactory, declarationOrderInAspect, aspectName);
 	}
