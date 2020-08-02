@@ -139,6 +139,8 @@ public abstract class HttpServletBean extends HttpServlet implements Environment
 	}
 
 	/**
+	 * 将配置参数映射到这个servlet的bean属性上，并调用子类初始化。
+	 *
 	 * Map config parameters onto bean properties of this servlet, and
 	 * invoke subclass initialization.
 	 * @throws ServletException if bean properties are invalid (or required
@@ -151,16 +153,18 @@ public abstract class HttpServletBean extends HttpServlet implements Environment
 		}
 
 		// Set bean properties from init parameters.
+		// 将servlet中配置的参数封装到pvs变量中，requiredProperties为必要参数，如果没配置，将报异常
 		PropertyValues pvs = new ServletConfigPropertyValues(getServletConfig(), this.requiredProperties);
 		if (!pvs.isEmpty()) {
 			try {
 				BeanWrapper bw = PropertyAccessorFactory.forBeanPropertyAccess(this);
 				ResourceLoader resourceLoader = new ServletContextResourceLoader(getServletContext());
 				bw.registerCustomEditor(Resource.class, new ResourceEditor(resourceLoader, getEnvironment()));
+				// 模板方法，可以在子类中调用，做一些初始化工作，bw代表DispatcherServlet
 				initBeanWrapper(bw);
+				// 将配置的初始化值(如contextConfigLocation)设置到DispatcherServlet
 				bw.setPropertyValues(pvs, true);
-			}
-			catch (BeansException ex) {
+			} catch (BeansException ex) {
 				if (logger.isErrorEnabled()) {
 					logger.error("Failed to set bean properties on servlet '" + getServletName() + "'", ex);
 				}
@@ -169,6 +173,7 @@ public abstract class HttpServletBean extends HttpServlet implements Environment
 		}
 
 		// Let subclasses do whatever initialization they like.
+		// 模板方法，子类初始化的入口方法
 		initServletBean();
 
 		if (logger.isDebugEnabled()) {
