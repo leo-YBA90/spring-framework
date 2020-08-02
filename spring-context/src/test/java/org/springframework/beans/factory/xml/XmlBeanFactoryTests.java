@@ -676,8 +676,7 @@ public class XmlBeanFactoryTests {
 		try {
 			xbf.getBean("init-method2");
 			fail();
-		}
-		catch (BeanCreationException ex) {
+		} catch (BeanCreationException ex) {
 			assertTrue(ex.getResourceDescription().contains("initializers.xml"));
 			assertEquals("init-method2", ex.getBeanName());
 			assertTrue(ex.getCause() instanceof IOException);
@@ -1113,8 +1112,7 @@ public class XmlBeanFactoryTests {
 			// let's resolve the bean definition; must blow up
 			factory.getBean("classNotFound");
 			fail("Must have thrown a CannotLoadBeanClassException");
-		}
-		catch (CannotLoadBeanClassException ex) {
+		} catch (CannotLoadBeanClassException ex) {
 			assertTrue(ex.getResourceDescription().contains("classNotFound.xml"));
 			assertTrue(ex.getCause() instanceof ClassNotFoundException);
 		}
