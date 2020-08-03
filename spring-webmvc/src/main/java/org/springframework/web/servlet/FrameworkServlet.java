@@ -515,6 +515,7 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 	}
 
 	/**
+	 * 初始化context
 	 * 1. 获取spring的根容器：rootContext
 	 * 2. 设置webApplicationContext并根据情况调用onRefresh方法
 	 * 3. 将webApplicationContext设置到ServletContext中
