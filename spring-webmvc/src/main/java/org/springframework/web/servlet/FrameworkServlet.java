@@ -966,7 +966,9 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 	}
 
 	/**
-	 * 处理此请求，发布事件，而不管结果如何。
+	 * 处理此请求，发布事件，而不管结果如何。主要做了两件事
+	 * 1. 对LocaleContext和ServletRequestAttributes的设置及恢复
+	 * 2. 处理完成后，发布ServletRequestHandledEvent事件
 	 * Process this request, publishing an event regardless of the outcome.
 	 * <p>The actual event handling is performed by the abstract
 	 * {@link #doService} template method.
