@@ -224,11 +224,13 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 	}
 
 	/**
+	 * 将handler保存到map中
 	 * Look for handler methods in the specified handler bean.
 	 * @param handler either a bean name or an actual handler instance
 	 * @see #getMappingForMethod
 	 */
 	protected void detectHandlerMethods(Object handler) {
+		// 获取handler的类型
 		Class<?> handlerType = (handler instanceof String ?
 				obtainApplicationContext().getType((String) handler) : handler.getClass());
 
@@ -249,6 +251,7 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 			}
 			methods.forEach((method, mapping) -> {
 				Method invocableMethod = AopUtils.selectInvocableMethod(method, userType);
+				// 将handler注册
 				registerHandlerMethod(handler, invocableMethod, mapping);
 			});
 		}
