@@ -565,22 +565,31 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 	@Override
 	public void afterPropertiesSet() {
 		// Do this first, it may add ResponseBody advice beans
+		// 初始化注解了@ContorllerAdvice的类的相关属性
 		initControllerAdviceCache();
-
+		// 初始化argumentResolvers
 		if (this.argumentResolvers == null) {
 			List<HandlerMethodArgumentResolver> resolvers = getDefaultArgumentResolvers();
 			this.argumentResolvers = new HandlerMethodArgumentResolverComposite().addResolvers(resolvers);
 		}
+		// 初始化initBinderArgumentResolvers
 		if (this.initBinderArgumentResolvers == null) {
 			List<HandlerMethodArgumentResolver> resolvers = getDefaultInitBinderArgumentResolvers();
 			this.initBinderArgumentResolvers = new HandlerMethodArgumentResolverComposite().addResolvers(resolvers);
 		}
+		// 初始化returnValueHandlers
 		if (this.returnValueHandlers == null) {
 			List<HandlerMethodReturnValueHandler> handlers = getDefaultReturnValueHandlers();
 			this.returnValueHandlers = new HandlerMethodReturnValueHandlerComposite().addHandlers(handlers);
 		}
 	}
 
+	/**
+	 * 初始化注解了@ContorllerAdvice的类的相关属性
+	 * 1. 首先通过ControllerAdviceBean.findAnnotatedBeans(getApplicationContext())拿到容器中所有注解了@ControllerAdvice的bean
+	 * 2. 根据order排序
+	 * 3. for循环遍历，找到每个bean相应的方法(或bean自身)设置到相应的属性。
+	 */
 	private void initControllerAdviceCache() {
 		if (getApplicationContext() == null) {
 			return;
@@ -588,8 +597,9 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 		if (logger.isInfoEnabled()) {
 			logger.info("Looking for @ControllerAdvice: " + getApplicationContext());
 		}
-
+		// 获取所有注解了@ControllerAdvice的bean
 		List<ControllerAdviceBean> adviceBeans = ControllerAdviceBean.findAnnotatedBeans(getApplicationContext());
+		// 根据order排序
 		AnnotationAwareOrderComparator.sort(adviceBeans);
 
 		List<Object> requestResponseBodyAdviceBeans = new ArrayList<>();
@@ -599,6 +609,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 			if (beanType == null) {
 				throw new IllegalStateException("Unresolvable type for ControllerAdviceBean: " + adviceBean);
 			}
+			// 查找注解了@ModelAttribute并且没有注解@RequestMapping的方法
 			Set<Method> attrMethods = MethodIntrospector.selectMethods(beanType, MODEL_ATTRIBUTE_METHODS);
 			if (!attrMethods.isEmpty()) {
 				this.modelAttributeAdviceCache.put(adviceBean, attrMethods);
@@ -606,6 +617,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 					logger.info("Detected @ModelAttribute methods in " + adviceBean);
 				}
 			}
+			// 查找注解了@InitBinder的方法
 			Set<Method> binderMethods = MethodIntrospector.selectMethods(beanType, INIT_BINDER_METHODS);
 			if (!binderMethods.isEmpty()) {
 				this.initBinderAdviceCache.put(adviceBean, binderMethods);
@@ -614,21 +626,22 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 				}
 			}
 
+			// 查找实现了RequestBodyAdvice接口的类
 			boolean isRequestBodyAdvice = RequestBodyAdvice.class.isAssignableFrom(beanType);
+			// 查找实现了ResponseBodyAdvice接口的类
 			boolean isResponseBodyAdvice = ResponseBodyAdvice.class.isAssignableFrom(beanType);
 			if (isRequestBodyAdvice || isResponseBodyAdvice) {
 				requestResponseBodyAdviceBeans.add(adviceBean);
 				if (logger.isInfoEnabled()) {
 					if (isRequestBodyAdvice) {
 						logger.info("Detected RequestBodyAdvice bean in " + adviceBean);
-					}
-					else {
+					} else {
 						logger.info("Detected ResponseBodyAdvice bean in " + adviceBean);
 					}
 				}
 			}
 		}
-
+		// 将查找到的实现了ResponseBodyAdvice接口的类从前面添加到requestResponseBodyAdvice属性
 		if (!requestResponseBodyAdviceBeans.isEmpty()) {
 			this.requestResponseBodyAdvice.addAll(0, requestResponseBodyAdviceBeans);
 		}
