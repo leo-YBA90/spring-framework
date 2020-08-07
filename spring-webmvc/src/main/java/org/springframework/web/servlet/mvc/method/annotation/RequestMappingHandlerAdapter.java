@@ -648,6 +648,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 	}
 
 	/**
+	 * 获取参数解析器
 	 * Return the list of argument resolvers to use including built-in resolvers
 	 * and custom resolvers provided via {@link #setCustomArgumentResolvers}.
 	 */
@@ -655,6 +656,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 		List<HandlerMethodArgumentResolver> resolvers = new ArrayList<>();
 
 		// Annotation-based argument resolution
+		// 添加按注解解析参数的解析器
 		resolvers.add(new RequestParamMethodArgumentResolver(getBeanFactory(), false));
 		resolvers.add(new RequestParamMapMethodArgumentResolver());
 		resolvers.add(new PathVariableMethodArgumentResolver());
@@ -672,6 +674,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 		resolvers.add(new RequestAttributeMethodArgumentResolver());
 
 		// Type-based argument resolution
+		// 添加按类型解析参数的解析器
 		resolvers.add(new ServletRequestMethodArgumentResolver());
 		resolvers.add(new ServletResponseMethodArgumentResolver());
 		resolvers.add(new HttpEntityMethodProcessor(getMessageConverters(), this.requestResponseBodyAdvice));
@@ -683,11 +686,13 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 		resolvers.add(new UriComponentsBuilderMethodArgumentResolver());
 
 		// Custom arguments
+		// 添加自定义解析器，主要用于解析自定义类型
 		if (getCustomArgumentResolvers() != null) {
 			resolvers.addAll(getCustomArgumentResolvers());
 		}
 
 		// Catch-all
+		// 解析所有类型的解析器
 		resolvers.add(new RequestParamMethodArgumentResolver(getBeanFactory(), true));
 		resolvers.add(new ServletModelAttributeMethodProcessor(true));
 
