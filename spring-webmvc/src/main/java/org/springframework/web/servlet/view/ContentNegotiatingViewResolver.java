@@ -242,7 +242,7 @@ public class ContentNegotiatingViewResolver extends WebApplicationObjectSupport
 		if (requestedMediaTypes != null) {
 			// 获取所有候选视图，内部通过遍历封装的viewResolvers来解析
 			List<View> candidateViews = getCandidateViews(viewName, locale, requestedMediaTypes);
-			// 从多个候选视图中找出最有视图
+			// 从多个候选视图中找出最优视图
 			View bestView = getBestView(candidateViews, requestedMediaTypes, attrs);
 			if (bestView != null) {
 				return bestView;
@@ -343,8 +343,16 @@ public class ContentNegotiatingViewResolver extends WebApplicationObjectSupport
 		return candidateViews;
 	}
 
+	/**
+	 * 获取最优视图
+	 * @param candidateViews
+	 * @param requestedMediaTypes
+	 * @param attrs
+	 * @return
+	 */
 	@Nullable
 	private View getBestView(List<View> candidateViews, List<MediaType> requestedMediaTypes, RequestAttributes attrs) {
+		// 判断候选视图中有没有redirect视图，如果有直接返回
 		for (View candidateView : candidateViews) {
 			if (candidateView instanceof SmartView) {
 				SmartView smartView = (SmartView) candidateView;
@@ -359,7 +367,9 @@ public class ContentNegotiatingViewResolver extends WebApplicationObjectSupport
 		for (MediaType mediaType : requestedMediaTypes) {
 			for (View candidateView : candidateViews) {
 				if (StringUtils.hasText(candidateView.getContentType())) {
+					// 根据候选视图获取对应的MediaType
 					MediaType candidateContentType = MediaType.parseMediaType(candidateView.getContentType());
+					// 判断当前MediaType是否支持从候选视图获取对应的MediaType，如text/*可以支持text/html.text/css.text/xml等所有text类型
 					if (mediaType.isCompatibleWith(candidateContentType)) {
 						if (logger.isDebugEnabled()) {
 							logger.debug("Returning [" + candidateView + "] based on requested media type '" +
