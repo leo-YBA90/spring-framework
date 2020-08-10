@@ -539,6 +539,7 @@ public class UrlBasedViewResolver extends AbstractCachingViewResolver implements
 	}
 
 	/**
+	 * 创建视图
 	 * Creates a new View instance of the specified view class and configures it.
 	 * Does <i>not</i> perform any lookup for pre-defined View instances.
 	 * <p>Spring lifecycle methods as defined by the bean container do not have to
@@ -558,7 +559,7 @@ public class UrlBasedViewResolver extends AbstractCachingViewResolver implements
 
 		AbstractUrlBasedView view = (AbstractUrlBasedView) BeanUtils.instantiateClass(viewClass);
 		view.setUrl(getPrefix() + viewName + getSuffix());
-
+		// 如果contentType不为null，将其值设置给view，可以在ViewResolver中配置
 		String contentType = getContentType();
 		if (contentType != null) {
 			view.setContentType(contentType);
@@ -566,11 +567,12 @@ public class UrlBasedViewResolver extends AbstractCachingViewResolver implements
 
 		view.setRequestContextAttribute(getRequestContextAttribute());
 		view.setAttributesMap(getAttributesMap());
-
+		// 如果exposePathVariables不为null，将其值设置给view，它用于标示是否让view使用PathVariables，可以在ViewResolver中配置.PathVariables就是处理器中@PathVariables注解的参数
 		Boolean exposePathVariables = getExposePathVariables();
 		if (exposePathVariables != null) {
 			view.setExposePathVariables(exposePathVariables);
 		}
+		// 如果exposeContextBeansAsAttributes不为null，将其值设置给view，它用于配置view可以使用容日中哪些bean，可以在ViewResolver中配置
 		Boolean exposeContextBeansAsAttributes = getExposeContextBeansAsAttributes();
 		if (exposeContextBeansAsAttributes != null) {
 			view.setExposeContextBeansAsAttributes(exposeContextBeansAsAttributes);
