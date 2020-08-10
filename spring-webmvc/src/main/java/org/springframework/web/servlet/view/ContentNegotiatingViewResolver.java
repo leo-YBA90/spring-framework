@@ -178,11 +178,16 @@ public class ContentNegotiatingViewResolver extends WebApplicationObjectSupport
 		return this.order;
 	}
 
-
+	/**
+	 * 初始化流程
+	 * @param servletContext the ServletContext that this application object runs in
+	 */
 	@Override
 	protected void initServletContext(ServletContext servletContext) {
+		// 获取容器中国所有ViewResolver类型的bean，注意，这里是从整个spring容器而不是spring MVC容器中获取
 		Collection<ViewResolver> matchingBeans =
 				BeanFactoryUtils.beansOfTypeIncludingAncestors(obtainApplicationContext(), ViewResolver.class).values();
+		// 如果没有手动注册，则将容器中找到的ViewResolver设置给viewResolvers
 		if (this.viewResolvers == null) {
 			this.viewResolvers = new ArrayList<>(matchingBeans.size());
 			for (ViewResolver viewResolver : matchingBeans) {
@@ -190,8 +195,8 @@ public class ContentNegotiatingViewResolver extends WebApplicationObjectSupport
 					this.viewResolvers.add(viewResolver);
 				}
 			}
-		}
-		else {
+		} else {
+			// 如果是手动注册的，并且在容器中不存在，则进行初始化
 			for (int i = 0; i < this.viewResolvers.size(); i++) {
 				ViewResolver vr = this.viewResolvers.get(i);
 				if (matchingBeans.contains(vr)) {
@@ -206,6 +211,7 @@ public class ContentNegotiatingViewResolver extends WebApplicationObjectSupport
 			logger.warn("Did not find any ViewResolvers to delegate to; please configure them using the " +
 					"'viewResolvers' property on the ContentNegotiatingViewResolver");
 		}
+		// 按照order属性进行排序
 		AnnotationAwareOrderComparator.sort(this.viewResolvers);
 		this.cnmFactoryBean.setServletContext(servletContext);
 	}
