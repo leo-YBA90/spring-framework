@@ -223,15 +223,26 @@ public class ContentNegotiatingViewResolver extends WebApplicationObjectSupport
 		}
 	}
 
-
+	/**
+	 * 视图解析过程
+	 * @param viewName name of the view to resolve
+	 * @param locale Locale in which to resolve the view.
+	 * ViewResolvers that support internationalization should respect this.
+	 * @return
+	 * @throws Exception
+	 */
 	@Override
 	@Nullable
 	public View resolveViewName(String viewName, Locale locale) throws Exception {
+		// 使用RequestContextHolder获取RequestAttributes，进而在下面获取request
 		RequestAttributes attrs = RequestContextHolder.getRequestAttributes();
 		Assert.state(attrs instanceof ServletRequestAttributes, "No current ServletRequestAttributes");
+		// 使用request获取MediaType，用作需要满足的条件
 		List<MediaType> requestedMediaTypes = getMediaTypes(((ServletRequestAttributes) attrs).getRequest());
 		if (requestedMediaTypes != null) {
+			// 获取所有候选视图，内部通过遍历封装的viewResolvers来解析
 			List<View> candidateViews = getCandidateViews(viewName, locale, requestedMediaTypes);
+			// 从多个候选视图中找出最有视图
 			View bestView = getBestView(candidateViews, requestedMediaTypes, attrs);
 			if (bestView != null) {
 				return bestView;
