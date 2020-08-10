@@ -513,6 +513,7 @@ public class UrlBasedViewResolver extends AbstractCachingViewResolver implements
 	}
 
 	/**
+	 * 加载视图
 	 * Delegates to {@code buildView} for creating a new instance of the
 	 * specified view class. Applies the following Spring lifecycle methods
 	 * (as supported by the generic Spring bean factory):
@@ -529,8 +530,11 @@ public class UrlBasedViewResolver extends AbstractCachingViewResolver implements
 	 */
 	@Override
 	protected View loadView(String viewName, Locale locale) throws Exception {
+		// 用buildView方法创建视图
 		AbstractUrlBasedView view = buildView(viewName);
+		// 使用applyLifecycleMethods方法对view进行初始化
 		View result = applyLifecycleMethods(viewName, view);
+		// 检查view对应的模板是否存在，如果存在则将初始化的视图返回，否则返回null，交给下一个ViewResolver处理
 		return (view.checkResource(locale) ? result : null);
 	}
 
