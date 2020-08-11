@@ -88,9 +88,16 @@ public abstract class AbstractFlashMapManager implements FlashMapManager {
 	}
 
 
+	/**
+	 * 检索更新List<FlashMap>
+	 * @param request the current request
+	 * @param response the current response
+	 * @return
+	 */
 	@Override
 	@Nullable
 	public final FlashMap retrieveAndUpdate(HttpServletRequest request, HttpServletResponse response) {
+		// 从存储介质中获取List<FlashMap>，是模板方法，子类实现
 		List<FlashMap> allFlashMaps = retrieveFlashMaps(request);
 		if (CollectionUtils.isEmpty(allFlashMaps)) {
 			return null;
@@ -99,12 +106,15 @@ public abstract class AbstractFlashMapManager implements FlashMapManager {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Retrieved FlashMap(s): " + allFlashMaps);
 		}
+		// 检查过去flashMap，并将它们设置到mapsToRemove变量
 		List<FlashMap> mapsToRemove = getExpiredFlashMaps(allFlashMaps);
+		// 获取与当前request匹配的flashMap，并设置到match变量
 		FlashMap match = getMatchingFlashMap(allFlashMaps, request);
+		// 如果有匹配的则将其添加到mapsToRemove,待下面删除
 		if (match != null) {
 			mapsToRemove.add(match);
 		}
-
+		// 删除mapsToRemove中保存的变量
 		if (!mapsToRemove.isEmpty()) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Removing FlashMap(s): " + mapsToRemove);
@@ -118,8 +128,7 @@ public abstract class AbstractFlashMapManager implements FlashMapManager {
 						updateFlashMaps(allFlashMaps, request, response);
 					}
 				}
-			}
-			else {
+			} else {
 				allFlashMaps.removeAll(mapsToRemove);
 				updateFlashMaps(allFlashMaps, request, response);
 			}
@@ -214,7 +223,7 @@ public abstract class AbstractFlashMapManager implements FlashMapManager {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Saving FlashMap=" + flashMap);
 		}
-		// 设置有效期
+		// 设置有效期，默认180s
 		flashMap.startExpirationPeriod(getFlashMapTimeout());
 		// 用于获取互斥变量，是模板方法，如果子类返回值不为null，则同步执行，否则不需要同步
 		Object mutex = getFlashMapsMutex(request);
