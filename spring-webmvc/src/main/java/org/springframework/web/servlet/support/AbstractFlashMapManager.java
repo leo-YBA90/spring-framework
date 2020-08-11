@@ -196,30 +196,38 @@ public abstract class AbstractFlashMapManager implements FlashMapManager {
 		return ServletUriComponentsBuilder.fromPath("/").query(query).build().getQueryParams();
 	}
 
+	/**
+	 * 保存FlashMap过程
+	 * @param flashMap the FlashMap to save
+	 * @param request the current request
+	 * @param response the current response
+	 */
 	@Override
 	public final void saveOutputFlashMap(FlashMap flashMap, HttpServletRequest request, HttpServletResponse response) {
 		if (CollectionUtils.isEmpty(flashMap)) {
 			return;
 		}
-
+		// 首先对flashMap中的转发地址和参数进行编码，这里的request主要用来获取当前编码方式
 		String path = decodeAndNormalizePath(flashMap.getTargetRequestPath(), request);
 		flashMap.setTargetRequestPath(path);
 
 		if (logger.isDebugEnabled()) {
 			logger.debug("Saving FlashMap=" + flashMap);
 		}
+		// 设置有效期
 		flashMap.startExpirationPeriod(getFlashMapTimeout());
-
+		// 用于获取互斥变量，是模板方法，如果子类返回值不为null，则同步执行，否则不需要同步
 		Object mutex = getFlashMapsMutex(request);
 		if (mutex != null) {
 			synchronized (mutex) {
+				// 取回保存的List<FlashMap>，如果没有获取到则新建一个，然后添加现有的flashMap
+				// retrieveFlashMaps方法用于获取List<FlashMap>,是模板方法，子类实现
 				List<FlashMap> allFlashMaps = retrieveFlashMaps(request);
 				allFlashMaps = (allFlashMaps != null ? allFlashMaps : new CopyOnWriteArrayList<>());
 				allFlashMaps.add(flashMap);
 				updateFlashMaps(allFlashMaps, request, response);
 			}
-		}
-		else {
+		} else {
 			List<FlashMap> allFlashMaps = retrieveFlashMaps(request);
 			allFlashMaps = (allFlashMaps != null ? allFlashMaps : new LinkedList<>());
 			allFlashMaps.add(flashMap);
