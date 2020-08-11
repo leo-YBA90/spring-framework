@@ -238,6 +238,7 @@ public abstract class CommonsFileUploadSupport {
 	}
 
 	/**
+	 * fileItems解析过程
 	 * Parse the given List of Commons FileItems into a Spring MultipartParsingResult,
 	 * containing Spring MultipartFile instances and a Map of multipart parameter.
 	 * @param fileItems the Commons FileIterms to parse
@@ -251,14 +252,15 @@ public abstract class CommonsFileUploadSupport {
 		Map<String, String> multipartParameterContentTypes = new HashMap<>();
 
 		// Extract multipart files and multipart parameters.
+		// 将fileItems分为文件和参数两类，并设置到map中
 		for (FileItem fileItem : fileItems) {
+			// 如果是参数类型
 			if (fileItem.isFormField()) {
 				String value;
 				String partEncoding = determineEncoding(fileItem.getContentType(), encoding);
 				try {
 					value = fileItem.getString(partEncoding);
-				}
-				catch (UnsupportedEncodingException ex) {
+				} catch (UnsupportedEncodingException ex) {
 					if (logger.isWarnEnabled()) {
 						logger.warn("Could not decode multipart item '" + fileItem.getFieldName() +
 								"' with encoding '" + partEncoding + "': using platform default");
@@ -267,18 +269,21 @@ public abstract class CommonsFileUploadSupport {
 				}
 				String[] curParam = multipartParameters.get(fileItem.getFieldName());
 				if (curParam == null) {
+					// 单个参数
 					// simple form field
 					multipartParameters.put(fileItem.getFieldName(), new String[] {value});
 				}
 				else {
+					// 数组参数
 					// array of simple form fields
 					String[] newParam = StringUtils.addStringToArray(curParam, value);
 					multipartParameters.put(fileItem.getFieldName(), newParam);
 				}
+				// 保存参数的contentType
 				multipartParameterContentTypes.put(fileItem.getFieldName(), fileItem.getContentType());
-			}
-			else {
+			} else {
 				// multipart file field
+				// 如果是文件类型
 				CommonsMultipartFile file = createMultipartFile(fileItem);
 				multipartFiles.add(file.getName(), file);
 				if (logger.isDebugEnabled()) {
