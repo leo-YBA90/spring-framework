@@ -146,6 +146,9 @@ public class CommonsMultipartResolver extends CommonsFileUploadSupport
 	}
 
 	/**
+	 * 使用common-fileupload中的FileUpload组件解析出fileItems,然后再调用parseFileItems分为参数和文件两类，并设置到三个Map中，
+	 * 三个map分别用于保存参数、参数contentType和上传的文件
+	 *
 	 * Parse the given servlet request, resolving its multipart elements.
 	 * @param request the request to parse
 	 * @return the parsing result
@@ -157,14 +160,11 @@ public class CommonsMultipartResolver extends CommonsFileUploadSupport
 		try {
 			List<FileItem> fileItems = ((ServletFileUpload) fileUpload).parseRequest(request);
 			return parseFileItems(fileItems, encoding);
-		}
-		catch (FileUploadBase.SizeLimitExceededException ex) {
+		} catch (FileUploadBase.SizeLimitExceededException ex) {
 			throw new MaxUploadSizeExceededException(fileUpload.getSizeMax(), ex);
-		}
-		catch (FileUploadBase.FileSizeLimitExceededException ex) {
+		} catch (FileUploadBase.FileSizeLimitExceededException ex) {
 			throw new MaxUploadSizeExceededException(fileUpload.getFileSizeMax(), ex);
-		}
-		catch (FileUploadException ex) {
+		} catch (FileUploadException ex) {
 			throw new MultipartException("Failed to parse multipart servlet request", ex);
 		}
 	}
