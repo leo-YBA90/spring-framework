@@ -203,6 +203,7 @@ public class SimpleMappingExceptionResolver extends AbstractHandlerExceptionReso
 	}
 
 	/**
+	 * 查找视图
 	 * Determine the view name for the given exception, first checking against the
 	 * {@link #setExcludedExceptions(Class[]) "excludedExecptions"}, then searching the
 	 * {@link #setExceptionMappings "exceptionMappings"}, and finally using the
@@ -214,6 +215,7 @@ public class SimpleMappingExceptionResolver extends AbstractHandlerExceptionReso
 	@Nullable
 	protected String determineViewName(Exception ex, HttpServletRequest request) {
 		String viewName = null;
+		// 如果一场在设置的excludedExceptions中所包含则返回null
 		if (this.excludedExceptions != null) {
 			for (Class<?> excludedEx : this.excludedExceptions) {
 				if (excludedEx.equals(ex.getClass())) {
@@ -222,10 +224,12 @@ public class SimpleMappingExceptionResolver extends AbstractHandlerExceptionReso
 			}
 		}
 		// Check for specific exception mappings.
+		// 调用findMatchingViewName方法实际查找
 		if (this.exceptionMappings != null) {
 			viewName = findMatchingViewName(this.exceptionMappings, ex);
 		}
 		// Return default error view else, if defined.
+		// 如果没有找到viewName并且配置了defaultErrorView，则使用defaultErrorView
 		if (viewName == null && this.defaultErrorView != null) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Resolving to default view '" + this.defaultErrorView + "' for exception of type [" +
